@@ -573,3 +573,86 @@ footer {
     margin: 0 !important;
 }
 
+
+
+@media (max-width: 768px) {
+    section {
+        padding: 10px;
+    }
+
+    .table-container {
+        margin: 10px 0;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    .section-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+
+/* Table Design Enhancements */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    padding: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+thead th {
+    background-color: #5965682f;
+    color: #fff;
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    border-bottom: 2px solid #ddd;
+}
+
+tbody td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+tbody td .toggle {
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+tbody td .toggle:hover {
+    color: #2c3e50;
+}
+
+
+.add-to-kvcore-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+.delete-selected-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+}

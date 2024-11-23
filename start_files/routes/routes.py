@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Request, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse, HTMLResponse, StreamingResponse
 from start_files.models.leads_db_section import (
@@ -259,3 +260,27 @@ def save_data(data: dict, section):
             db.add(new_lead)
             db.commit()
             return {'message': f'{section.__tablename__} information saved successfully'}
+
+
+
+class AddToKvCoreRequest(BaseModel):
+    ids: List[int]  # List of selected entry IDs
+    section: str
+    
+@router.post("/add_to_kvcore")
+async def add_to_kvcore(ids, section: AddToKvCoreRequest):
+    try:
+        logger.info(f"Received data: {ids}, section: {section}")
+        return {"status": "success", "message": f"Entries added to {section} section"}
+    except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+@router.post("/delete_entries")
+async def delete_entries(request: AddToKvCoreRequest):
+    try:
+        logger.info(f"Received data: {request.ids}, section: {request.section}")
+        return {"status": "success", "message": f"Entries deleted from {request.section} section"}
+    except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
