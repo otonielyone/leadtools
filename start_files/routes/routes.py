@@ -280,38 +280,38 @@ class AddToKvCoreRequest(BaseModel):
             }
         }
 
+from sqlalchemy.orm import class_mapper
+
+# Helper function to serialize SQLAlchemy objects
+def serialize_sqlalchemy_obj(obj):
+    return {col.key: getattr(obj, col.key) for col in class_mapper(obj.__class__).columns}
+
 @router.post("/add_to_kvcore")
 async def add_to_kvcore(request: AddToKvCoreRequest):            
     try:
-
         with leads_sessionLocal() as db:
-            for id in request.ids:
+            variables = []
+            table = None
 
-                # Determine the correct table based on the section
-                if 'possible_leads' in request.section:
-                    table = Possible_leads
-                elif 'no_leads' in request.section:
-                    table = No_leads
-                elif 'no_answer' in request.section:
-                    table = No_answer
-                else:
-                    logger.error(f"Invalid section: {request.section}")
-                    return {
-                        "status": "error",
-                        "message": f"Invalid section provided: {request.section}"
-                    }
-        
-                id_found = db.query(table).filter_by(id=id).first()  # Query using the model class (section)
+            if 'possible_leads' in request.section:
+                table = Possible_leads
+            elif 'no_leads' in request.section:
+                table = No_leads
+            elif 'no_answer' in request.section:
+                table = No_answer
+
+            if not table:
+                raise ValueError(f"Invalid section: {request.section}")
+
+            for id in request.ids:
+                id_found = db.query(table).filter_by(id=id).first()
                 if id_found:
-                    logger.info(
-                        f"Variables --> Section: {table} and Ids: {id}"
-                    )
+                    variables.append(serialize_sqlalchemy_obj(id_found))
             return {
-                "status": "success",
-                "message": f"Successfully added: {id} entries to KVCore"
-            }
+                "status": "success"}, logger.info(f"Successfully added {variables} to KVCore")
     except Exception as e:
         logger.error(f"Error adding entries to KVCore: {str(e)}", exc_info=True)
+        return {"status": "error"}
 
 
 @router.post("/delete_entries")
@@ -332,12 +332,6 @@ async def delete_entries(request: AddToKvCoreRequest):
                 table = No_leads
             elif 'no_answer' in request.section:
                 table = No_answer
-            else:
-                logger.error(f"Invalid section: {request.section}")
-                return {
-                    "status": "error",
-                    "message": f"Invalid section provided: {request.section}"
-                }
             
             for id in request.ids:
                 id_found = db.query(table).filter_by(id=id).first()

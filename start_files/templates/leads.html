@@ -227,14 +227,14 @@
     
         // Section-specific checkbox and button handling (from previous solution)
         function updatePossibleLeadButtons() {
-            const checkedCount = $('#possible-lead-list .entry-checkbox[data-section="possible_lead"]:checked').length;
+            const checkedCount = $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]:checked').length;
             const hasSelection = checkedCount > 0;
             $('#possible-lead-list .add-to-kvcore-btn').prop('disabled', !hasSelection);
             $('#possible-lead-list .delete-selected-btn').prop('disabled', !hasSelection);
         }
     
         function updateNoLeadButtons() {
-            const checkedCount = $('#no-lead-list .entry-checkbox[data-section="no_lead"]:checked').length;
+            const checkedCount = $('#no-lead-list .entry-checkbox[data-section="no_leads"]:checked').length;
             const hasSelection = checkedCount > 0;
             $('#no-lead-list .add-to-kvcore-btn').prop('disabled', !hasSelection);
             $('#no-lead-list .delete-selected-btn').prop('disabled', !hasSelection);
@@ -248,18 +248,18 @@
         }
     
         function updatePossibleLeadSelectAll() {
-            const totalCheckboxes = $('#possible-lead-list .entry-checkbox[data-section="possible_lead"]').length;
-            const checkedCheckboxes = $('#possible-lead-list .entry-checkbox[data-section="possible_lead"]:checked').length;
-            $('#possible-lead-list .select-all[data-section="possible_lead"]').prop('checked', 
+            const totalCheckboxes = $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]').length;
+            const checkedCheckboxes = $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]:checked').length;
+            $('#possible-lead-list .select-all[data-section="possible_leads"]').prop('checked', 
                 totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes
             );
             updatePossibleLeadButtons();
         }
     
         function updateNoLeadSelectAll() {
-            const totalCheckboxes = $('#no-lead-list .entry-checkbox[data-section="no_lead"]').length;
-            const checkedCheckboxes = $('#no-lead-list .entry-checkbox[data-section="no_lead"]:checked').length;
-            $('#no-lead-list .select-all[data-section="no_lead"]').prop('checked', 
+            const totalCheckboxes = $('#no-lead-list .entry-checkbox[data-section="no_leads"]').length;
+            const checkedCheckboxes = $('#no-lead-list .entry-checkbox[data-section="no_leads"]:checked').length;
+            $('#no-lead-list .select-all[data-section="no_leads"]').prop('checked', 
                 totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes
             );
             updateNoLeadButtons();
@@ -425,15 +425,15 @@
         });
     
         // Event handlers for "Select All" checkboxes
-        $('#possible-lead-list .select-all[data-section="possible_lead"]').on('change', function() {
+        $('#possible-lead-list .select-all[data-section="possible_leads"]').on('change', function() {
             const isChecked = $(this).prop('checked');
-            $('#possible-lead-list .entry-checkbox[data-section="possible_lead"]').prop('checked', isChecked);
+            $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]').prop('checked', isChecked);
             updatePossibleLeadButtons();
         });
     
-        $('#no-lead-list .select-all[data-section="no_lead"]').on('change', function() {
+        $('#no-lead-list .select-all[data-section="no_leads"]').on('change', function() {
             const isChecked = $(this).prop('checked');
-            $('#no-lead-list .entry-checkbox[data-section="no_lead"]').prop('checked', isChecked);
+            $('#no-lead-list .entry-checkbox[data-section="no_leads"]').prop('checked', isChecked);
             updateNoLeadButtons();
         });
     
@@ -444,11 +444,11 @@
         });
     
         // Event handlers for individual checkboxes
-        $('#possible-lead-list .entry-checkbox[data-section="possible_lead"]').on('change', function() {
+        $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]').on('change', function() {
             updatePossibleLeadSelectAll();
         });
     
-        $('#no-lead-list .entry-checkbox[data-section="no_lead"]').on('change', function() {
+        $('#no-lead-list .entry-checkbox[data-section="no_leads"]').on('change', function() {
             updateNoLeadSelectAll();
         });
     
@@ -459,18 +459,18 @@
         // Delete handlers for each section
         $('#possible-lead-list .delete-selected-btn').on('click', function() {
             const selectedIds = [];
-            $('#possible-lead-list .entry-checkbox[data-section="possible_lead"]:checked').each(function() {
+            $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]:checked').each(function() {
                 selectedIds.push($(this).data('entry-id'));
             });
-            handleDelete(selectedIds, 'possible_lead');
+            handleDelete(selectedIds, 'possible_leads');
         });
     
         $('#no-lead-list .delete-selected-btn').on('click', function() {
             const selectedIds = [];
-            $('#no-lead-list .entry-checkbox[data-section="no_lead"]:checked').each(function() {
+            $('#no-lead-list .entry-checkbox[data-section="no_leads"]:checked').each(function() {
                 selectedIds.push($(this).data('entry-id'));
             });
-            handleDelete(selectedIds, 'no_lead');
+            handleDelete(selectedIds, 'no_leads');
         });
     
         $('#no-answer-list .delete-selected-btn').on('click', function() {
@@ -484,18 +484,18 @@
         // KVCore handlers for each section
         $('#possible-lead-list .add-to-kvcore-btn').on('click', function() {
             const selectedIds = [];
-            $('#possible-lead-list .entry-checkbox[data-section="possible_lead"]:checked').each(function() {
+            $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]:checked').each(function() {
                 selectedIds.push($(this).data('entry-id'));
             });
-            handleKVCore(selectedIds, 'possible_lead');
+            handleKVCore(selectedIds, 'possible_leads');
         });
     
         $('#no-lead-list .add-to-kvcore-btn').on('click', function() {
             const selectedIds = [];
-            $('#no-lead-list .entry-checkbox[data-section="no_lead"]:checked').each(function() {
+            $('#no-lead-list .entry-checkbox[data-section="no_leads"]:checked').each(function() {
                 selectedIds.push($(this).data('entry-id'));
             });
-            handleKVCore(selectedIds, 'no_lead');
+            handleKVCore(selectedIds, 'no_leads');
         });
     
         $('#no-answer-list .add-to-kvcore-btn').on('click', function() {
@@ -519,8 +519,8 @@
                         }),
                         contentType: 'application/json',
                         success: function(response) {
-                            if (section === 'possible_lead') updatePossibleLeadSelectAll();
-                            else if (section === 'no_lead') updateNoLeadSelectAll();
+                            if (section === 'possible_leads') updatePossibleLeadSelectAll();
+                            else if (section === 'no_leads') updateNoLeadSelectAll();
                             else if (section === 'no_answer') updateNoAnswerSelectAll();
                             alert('Entries deleted successfully');
                         },
@@ -548,8 +548,8 @@
                         contentType: 'application/json',
                         success: function(response) {
                             $(`#${section}-list .entry-checkbox[data-section="${section}"]`).prop('checked', false);
-                            if (section === 'possible_lead') updatePossibleLeadSelectAll();
-                            else if (section === 'no_lead') updateNoLeadSelectAll();
+                            if (section === 'possible_leads') updatePossibleLeadSelectAll();
+                            else if (section === 'no_leads') updateNoLeadSelectAll();
                             else if (section === 'no_answer') updateNoAnswerSelectAll();
                             alert('Successfully added to KVCore');
                         },
