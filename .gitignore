@@ -9,3 +9,4 @@ start_files/static/rentals_images/
 start_files/static/credentials.json
 services/yonehomes-50e3014c6fd5.json
 .env
+.venv
