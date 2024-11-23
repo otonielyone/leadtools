@@ -210,20 +210,89 @@
         </div>
     </div>
     
+        <!-- Script Section -->
     <script>
+// Helper function to reset all checkboxes in a section and reset the "Select All" checkbox
+function resetCheckboxes(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        // Reset individual checkboxes
+        const checkboxes = section.querySelectorAll('.entry-checkbox');
+        checkboxes.forEach(checkbox => checkbox.checked = false);
 
-    <!-- Script Section -->
-    $(document).ready(function () {
-        // DataTable initialization
-        const table = $('#basicInfoTable').DataTable({
-            pageLength: 10,
-            responsive: true,
-            initComplete: function () {
-                $('#loader').hide();
-                $('#basicInfoTable').show();
-                $('.toggle-content').hide();
-            }
-        });
+        // Reset "Select All" checkbox for the specific section
+        const selectAll = section.querySelector('.select-all');
+        if (selectAll) {
+            selectAll.checked = false;
+        }
+    }
+    // Update button states
+    updateSectionButtons(sectionId);
+}
+
+// Event listeners for toggling the visibility of the sections and resetting checkboxes
+document.getElementById('toggle-possible-lead').addEventListener('click', function () {
+    const sectionId = 'possible-lead-list';
+    const sectionElement = document.getElementById(sectionId);
+
+    sectionElement.style.display = sectionElement.style.display === 'block' ? 'none' : 'block';
+    if (sectionElement.style.display === 'none') {
+        resetCheckboxes(sectionId);
+    }
+});
+
+document.getElementById('toggle-no-lead').addEventListener('click', function () {
+    const sectionId = 'no-lead-list';
+    const sectionElement = document.getElementById(sectionId);
+
+    sectionElement.style.display = sectionElement.style.display === 'block' ? 'none' : 'block';
+    if (sectionElement.style.display === 'none') {
+        resetCheckboxes(sectionId);
+    }
+});
+
+document.getElementById('toggle-no-answer').addEventListener('click', function () {
+    const sectionId = 'no-answer-list';
+    const sectionElement = document.getElementById(sectionId);
+
+    sectionElement.style.display = sectionElement.style.display === 'block' ? 'none' : 'block';
+    if (sectionElement.style.display === 'none') {
+        resetCheckboxes(sectionId);
+    }
+});
+
+// Form submission for generating new leads
+$('#leadsForm').on('submit', function(e) {
+    e.preventDefault();
+    $('#loader').show();
+    $('#basicInfoTable').hide();
+
+    $.ajax({
+        url: $(this).attr('action'),
+        method: 'GET',
+        success: function(response) {
+            $('#loader').hide();
+            $('#basicInfoTable').show();
+            location.reload(); // Reload the page to reflect the new data
+        },
+        error: function() {
+            $('#loader').hide();
+            alert('Error generating leads');
+        }
+    });
+});
+
+$(document).ready(function () {
+    // DataTable initialization
+    const table = $('#basicInfoTable').DataTable({
+        pageLength: 10,
+        responsive: true,
+        initComplete: function () {
+            $('#loader').hide();
+            $('#basicInfoTable').show();
+            $('.toggle-content').hide();
+        }
+    });
     
         // Section-specific checkbox and button handling (from previous solution)
         function updatePossibleLeadButtons() {
@@ -395,6 +464,9 @@
                 success: function (response) {
                     console.log('Entry saved successfully:', response);
                     alert(`Entry successfully added to ${section.replace('_', ' ')}`);
+
+                    // Reset checkboxes after successful action
+                    resetCheckboxes(section);
                 },
                 error: function () {
                     console.error('Error saving lead entry');
@@ -403,27 +475,7 @@
             });
         });
     
-        // Form submission for generating new leads
-        $('#leadsForm').on('submit', function(e) {
-            e.preventDefault();
-            $('#loader').show();
-            $('#basicInfoTable').hide();
-    
-            $.ajax({
-                url: $(this).attr('action'),
-                method: 'GET',
-                success: function(response) {
-                    $('#loader').hide();
-                    $('#basicInfoTable').show();
-                    location.reload();
-                },
-                error: function() {
-                    $('#loader').hide();
-                    alert('Error generating leads');
-                }
-            });
-        });
-    
+        
         // Event handlers for "Select All" checkboxes
         $('#possible-lead-list .select-all[data-section="possible_leads"]').on('change', function() {
             const isChecked = $(this).prop('checked');
@@ -507,7 +559,6 @@
         });
     
         function handleDelete(selectedIds, section) {
-            alert('Selected IDs: ' + JSON.stringify(selectedIds));  // This will display the selected IDs in a readable format
             if (selectedIds.length > 0) {
                 if (confirm(`Are you sure you want to delete ${selectedIds.length} selected entries?`)) {
                     $.ajax({
@@ -535,7 +586,6 @@
         }
     
         function handleKVCore(selectedIds, section) {
-            alert('Selected IDs: ' + JSON.stringify(selectedIds));  // This will display the selected IDs in a readable format
             if (selectedIds.length > 0) {
                 if (confirm(`Add ${selectedIds.length} selected entries to KVCore?`)) {
                     $.ajax({
@@ -567,7 +617,72 @@
         updatePossibleLeadButtons();
         updateNoLeadButtons();
         updateNoAnswerButtons();
+
+        // Function to toggle and refresh content when section is displayed
+        function refreshSectionContent(sectionId, sectionType) {
+            const sectionElement = document.getElementById(sectionId);
+
+            // If the section is becoming visible, trigger a content refresh
+            if (sectionElement.style.display === 'none') {
+                sectionElement.style.display = 'block';
+                
+                // Fetch new data and refresh the section content
+                refreshContent(sectionType, sectionId);
+            } else {
+                // If the section is being hidden, simply toggle the display
+                sectionElement.style.display = 'none';
+            }
+        }
+
+        // Function to fetch and refresh content for a specific section
+        function refreshContent(sectionType, sectionId) {
+            const tbody = document.querySelector(`#${sectionId} tbody`);
+            tbody.innerHTML = '<tr><td colspan="5">Loading...</td></tr>'; // Show loading message
+            
+            // Fetch new data from the backend for the section
+            fetch(`/get_section_data?section=${sectionType}`)
+                .then(response => response.json())
+                .then(data => {
+                    tbody.innerHTML = ''; // Clear existing rows
+                    if (data && data.length > 0) {
+                        data.forEach(entry => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td><input type="checkbox" class="entry-checkbox" data-section="${sectionType}" data-entry-id="${entry.id}"></td>
+                                <td>${entry.name}</td>
+                                <td>${entry.email || 'no email found'}</td>
+                                <td>${entry.phone}</td>
+                                <td>${entry.notes || ''}</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="5">No entries found.</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching section data:', error);
+                    tbody.innerHTML = '<tr><td colspan="5">Error loading data.</td></tr>';
+                });
+        }
+
+        // Add event listeners to your buttons
+        document.getElementById('toggle-no-lead').addEventListener('click', function() {
+            refreshSectionContent('no-lead-list', 'no_leads');
+        });
+
+        document.getElementById('toggle-no-answer').addEventListener('click', function() {
+            refreshSectionContent('no-answer-list', 'no_answer');
+        });
+
+        document.getElementById('toggle-possible-lead').addEventListener('click', function() {
+            refreshSectionContent('possible-lead-list', 'possible_leads');
+        });
+
+
     });
+
+    
    </script>
 </body>
 </html>

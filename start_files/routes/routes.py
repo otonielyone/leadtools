@@ -147,6 +147,29 @@ async def view_leads(request: Request):
     templates = request.app.state.templates
     return templates.TemplateResponse("leads.html", {"request": request, "leads": leads, "possible_entries": possible_entries, "no_answer_entries": no_answer_entries,"no_leads_entries": no_leads_entries})
 
+# Route to get section data dynamically for a given section
+@router.get("/get_section_data")
+async def get_section_data(section: str):
+    with leads_sessionLocal() as db:
+        if section == 'possible_leads':
+            entries = db.query(Possible_leads).all()
+        elif section == 'no_leads':
+            entries = db.query(No_leads).all()
+        elif section == 'no_answer':
+            entries = db.query(No_answer).all()
+        else:
+            raise HTTPException(status_code=400, detail="Invalid section")
+
+        # Return the data in a suitable format for frontend
+        return [{
+            'id': entry.id,
+            'name': entry.name,
+            'phone': entry.phone,
+            'email': entry.email,
+            'notes': entry.notes or ''
+        } for entry in entries]
+
+
 # API to start MLS leads data gathering in the background
 @router.get("/api/populate_leads_database", response_model=dict, name="import_leads")
 async def get_leads_data(background_tasks: BackgroundTasks, request: Request, concurrency_limit: int = 10, max_retries: int = 20, delay: int=1):
@@ -307,32 +330,36 @@ async def add_to_kvcore(request: AddToKvCoreRequest):
                 id_found = db.query(table).filter_by(id=id).first()
                 if id_found:
                     variables.append(serialize_sqlalchemy_obj(id_found))
+                db.delete(id_found)
+                db.commit()
+            data = {key: value for d in variables for key, value in d.items()}
             return {
-                "status": "success"}, logger.info(f"Successfully added {variables} to KVCore")
-    except Exception as e:
-        logger.error(f"Error adding entries to KVCore: {str(e)}", exc_info=True)
+                "status": "success"}, logger.info(f"Successfully added {data} to KVCore")
+    except Exception:
+        logger.error(f"Error adding entries to KVCore")
         return {"status": "error"}
 
 
 @router.post("/delete_entries")
 async def delete_entries(request: AddToKvCoreRequest):
-    try:        
+    try:
         logger.info(
             f"Deleting entries - Section: {request.section}, "
             f"Ids: {request.ids}"
         )
         with leads_sessionLocal() as db:
+            if request.section == 'possible_leads':
+                table = Possible_leads
+            elif request.section == 'no_leads':
+                table = No_leads
+            elif request.section == 'no_answer':
+                table = No_answer
+            else:
+                raise ValueError(f"Invalid section: {request.section}")
+
             deleted_ids = []
             not_found_ids = []
-            
-            # Determine the correct table based on the section
-            if 'possible_leads' in request.section:
-                table = Possible_leads
-            elif 'no_leads' in request.section:
-                table = No_leads
-            elif 'no_answer' in request.section:
-                table = No_answer
-            
+
             for id in request.ids:
                 id_found = db.query(table).filter_by(id=id).first()
                 if id_found:
@@ -340,7 +367,9 @@ async def delete_entries(request: AddToKvCoreRequest):
                     deleted_ids.append(id)
                 else:
                     not_found_ids.append(id)
+
             db.commit()
+
         messages = []
         if deleted_ids:
             messages.append(f"Deleted entries: {', '.join(map(str, deleted_ids))}")
