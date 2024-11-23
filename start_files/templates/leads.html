@@ -27,9 +27,14 @@
             <!-- Toggle buttons for sections -->
             <button id="toggle-possible-lead">Possible Lead</button>
             <div id="possible-lead-list" style="display: none;">
+                <div class="section-actions">
+                    <button class="add-to-kvcore-btn" data-section="possible-lead">Add Selected to KVCore</button>
+                    <button class="delete-selected-btn" data-section="possible-lead">Delete Selected</button>
+                </div>
                 <table border="1">
                     <thead>
                         <tr>
+                            <th class="checkbox-column"><input type="checkbox" class="select-all" data-section="possible-lead"></th>
                             <th>Customer Name</th>
                             <th>Email</th>
                             <th>Phone</th>
@@ -39,6 +44,7 @@
                     <tbody>
                         {% for entry in possible_entries %}
                             <tr>
+                                <td><input type="checkbox" class="entry-checkbox" data-section="possible-lead" data-entry-id="{{ entry.id }}"></td>
                                 <td>{{ entry.customer_name }}</td>
                                 <td>{{ entry.customer_email if entry.customer_email else 'no email found' }}</td>
                                 <td>{{ entry.customer_phone }}</td>
@@ -51,9 +57,14 @@
 
             <button id="toggle-no-lead">No Lead</button>
             <div id="no-lead-list" style="display: none;">
+                <div class="section-actions">
+                    <button class="add-to-kvcore-btn" data-section="possible-lead">Add Selected to KVCore</button>
+                    <button class="delete-selected-btn" data-section="possible-lead">Delete Selected</button>
+                </div>
                 <table border="1">
                     <thead>
                         <tr>
+                            <th class="checkbox-column"><input type="checkbox" class="select-all" data-section="possible-lead"></th>
                             <th>Customer Name</th>
                             <th>Email</th>
                             <th>Phone</th>
@@ -63,6 +74,7 @@
                     <tbody>
                         {% for entry in no_answer_entries %}
                             <tr>
+                                <td><input type="checkbox" class="entry-checkbox" data-section="no-lead" data-entry-id="{{ entry.id }}"></td>
                                 <td>{{ entry.customer_name }}</td>
                                 <td>{{ entry.customer_email if entry.customer_email else 'no email found' }}</td>
                                 <td>{{ entry.customer_phone }}</td>
@@ -75,9 +87,14 @@
             
             <button id="toggle-no-answer">No Answer</button>
             <div id="no-answer-list" style="display: none;">
+                <div class="section-actions">
+                    <button class="add-to-kvcore-btn" data-section="possible-lead">Add Selected to KVCore</button>
+                    <button class="delete-selected-btn" data-section="possible-lead">Delete Selected</button>
+                </div>
                 <table border="1">
                     <thead>
                         <tr>
+                            <th class="checkbox-column"><input type="checkbox" class="select-all" data-section="no-lead"></th>
                             <th>Customer Name</th>
                             <th>Email</th>
                             <th>Phone</th>
@@ -87,6 +104,7 @@
                     <tbody>
                         {% for entry in no_answer_entries %}
                             <tr>
+                                <td><input type="checkbox" class="entry-checkbox" data-section="no-answer" data-entry-id="{{ entry.id }}"></td>
                                 <td>{{ entry.customer_name }}</td>
                                 <td>{{ entry.customer_email if entry.customer_email else 'no email found' }}</td>
                                 <td>{{ entry.customer_phone }}</td>
@@ -124,6 +142,7 @@
                                     </div>
                                 </td>
                                 
+
                                 <td>{{ listing.Status }}</td>
                                 <td>{{ listing.Owner_Phone }}</td>
 
@@ -204,6 +223,68 @@
                 }
             });
 
+
+            // New checkbox functionality
+            // Handle "Select All" checkboxes
+            $('.select-all').on('change', function() {
+                const section = $(this).data('section');
+                const isChecked = $(this).prop('checked');
+                $(`#${section}-list .entry-checkbox`).prop('checked', isChecked);
+            });
+
+            // Handle "Add to KVCore" button clicks
+            $('.add-to-kvcore-btn').on('click', function() {
+                const section = $(this).data('section');
+                const selectedIds = [];
+                
+                $(`#${section}-list .entry-checkbox:checked`).each(function() {
+                    selectedIds.push($(this).data('entry-id'));
+                });
+
+                if (selectedIds.length > 0) {
+                    console.log(`Adding to KVCore: ${selectedIds.join(', ')} from ${section}`);
+                    alert(`Placeholder: Adding ${selectedIds.length} entries to KVCore from ${section} section`);
+                    
+                    // Placeholder for KVCore API integration
+                    // $.ajax({
+                    //     url: '/api/add-to-kvcore',
+                    //     method: 'POST',
+                    //     data: JSON.stringify({ ids: selectedIds, section: section }),
+                    //     contentType: 'application/json',
+                    //     success: function(response) {
+                    //         // Handle success
+                    //     }
+                    // });
+                }
+            });
+
+            // Handle "Delete Selected" button clicks
+            $('.delete-selected-btn').on('click', function() {
+                const section = $(this).data('section');
+                const selectedIds = [];
+                
+                $(`#${section}-list .entry-checkbox:checked`).each(function() {
+                    selectedIds.push($(this).data('entry-id'));
+                });
+
+                if (selectedIds.length > 0) {
+                    console.log(`Deleting: ${selectedIds.join(', ')} from ${section}`);
+                    alert(`Placeholder: Deleting ${selectedIds.length} entries from ${section} section`);
+                    
+                    // Placeholder for delete API call
+                    // $.ajax({
+                    //     url: '/api/delete-entries',
+                    //     method: 'POST',
+                    //     data: JSON.stringify({ ids: selectedIds, section: section }),
+                    //     contentType: 'application/json',
+                    //     success: function(response) {
+                    //         // Handle success and remove rows from table
+                    //     }
+                    // });
+                }
+            });
+
+
             // Toggle for list sections (Possible Lead, No Lead, etc.)
             ['possible-lead', 'no-lead', 'no-answer'].forEach(section => {
                 $(`#toggle-${section}`).click(function() {
@@ -224,7 +305,6 @@
                 const ownerNames = $(this).data('owner-names');
                 const ownerPhone = $(this).data('owner-phone');
                 const ownerEmail = $(this).data('owner-email');
-                const ownerNotes = $(this).data('owner-notes');
                 const section = $(this).data('section');  // Still keep section to classify into the correct group
 
                 // Construct the payload to send to the backend (no status now)
@@ -233,7 +313,6 @@
                     owner_names: ownerNames,
                     owner_phone: ownerPhone,
                     owner_email: ownerEmail,
-                    owner_notes: ownerNotes,
                     section: section  // The section like "possible_leads", "no_leads", etc.
                 };
 
@@ -251,7 +330,7 @@
                 });
             });
 
-            // Notes functionality - Show/Save/Delete notes
+            // Handle Notes functionality
             function handleNotes(action, identifier, notes = null) {
                 let url = '';
                 const data = { [identifier.includes('@') ? 'email' : 'mls']: identifier };
@@ -273,7 +352,7 @@
                     data: JSON.stringify(data),
                     success: function (response) {
                         if (action === 'get' && response.notes) {
-                            $('#notes-' + identifier).val(response.notes);  // Populates the notes input field
+                            $('#notes-' + identifier).val(response.notes); // Populate the notes input field with existing notes
                         }
                     },
                     error: function () {
@@ -282,18 +361,32 @@
                 });
             }
 
-            // Save notes handler
-            $('#basicInfoTable tbody').on('click', '.save-notes', function () {
-                const mls = $(this).data('mls');
-                const notes = $('#notes-' + mls).val();
-                handleNotes('save', mls, notes);
+            // Show notes input when "Add Notes" button is clicked
+            $('#basicInfoTable tbody').on('click', '.add-notes', function () {
+                const mls = $(this).data('mls');  // Get the MLS identifier
+                const notesInput = $(this).siblings('.notes-input');  // Find the associated notes input area
+
+                // Toggle visibility of the notes input area
+                notesInput.toggle();
+
+                // If the notes input is visible and it's the first time, load existing notes
+                if (notesInput.is(':visible')) {
+                    handleNotes('get', mls);  // Fetch and display existing notes if any
+                }
             });
 
-            // Delete notes handler
+            // Save notes when the save button is clicked
+            $('#basicInfoTable tbody').on('click', '.save-notes', function () {
+                const mls = $(this).data('mls');  // Get the MLS identifier
+                const notes = $('#notes-' + mls).val();  // Get the text from the textarea
+                handleNotes('save', mls, notes);  // Save the notes
+            });
+
+            // Delete notes when the delete button is clicked
             $('#basicInfoTable tbody').on('click', '.delete-notes', function () {
-                const mls = $(this).data('mls');
-                handleNotes('delete', mls);
-                $('#notes-' + mls).val('');
+                const mls = $(this).data('mls');  // Get the MLS identifier
+                handleNotes('delete', mls);  // Delete the notes
+                $('#notes-' + mls).val('');  // Clear the notes input field
             });
         });
     </script>

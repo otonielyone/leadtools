@@ -502,3 +502,74 @@ footer {
     }
     
 }
+
+
+
+/* Toggle section styles */
+#toggle-possible-lead,
+#toggle-no-lead,
+#toggle-no-answer {
+    width: 100%;
+    padding: 10px 15px;
+    margin: 10px 0;
+    background-color: #34495e;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: left;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+#toggle-possible-lead:hover,
+#toggle-no-lead:hover,
+#toggle-no-answer:hover {
+    background-color: #e9ecef;
+}
+
+#possible-lead-list,
+#no-lead-list,
+#no-answer-list {
+    margin-bottom: 30px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 20px;
+    background-color: white;
+}
+
+/* Ensure proper spacing between sections */
+.section-actions {
+    margin: 0 0 15px 0;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    display: flex;
+    gap: 10px;
+}
+
+/* Table wrapper styles */
+.dataTables_wrapper {
+    margin-top: 0;
+    padding: 0;
+    clear: both;
+}
+
+/* Container styles */
+.container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Responsive table container */
+.table-container {
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+/* Table styles */
+.display {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
