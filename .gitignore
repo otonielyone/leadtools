@@ -6,6 +6,6 @@ start_files/brightscrape/
 start_files/static/images/
 start_files/static/homes_images/
 start_files/static/rentals_images/
-start_files/static/credentials.json:1
+start_files/static/credentials.json
 services/yonehomes-50e3014c6fd5.json
 .env
