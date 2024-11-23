@@ -1,0 +1,366 @@
+:root {
+    --primary-color: #007BFF;
+    --background-color-light: #f9f9f9;
+    --background-color: #f5f5f5;
+    --section-bg-color: #FAFAFA;
+    --section-bg-color-light: #f1f1f1;
+    --text-color: #34495e;
+    --border-color: #ccc;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --highlight-color: #ffffff;
+    --coral-color: #ff6b81;
+}
+
+/* Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header {
+    background-color: var(--section-bg-color);
+    color: var(--text-color);
+    padding: 20px 0;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 30px;
+}
+
+/* Body */
+body {
+    font-family: 'Roboto', 'Arial', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 10px;
+    background-color: var(--background-color-light);
+    overflow-y: auto;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 1440px;
+    background-color: var(--highlight-color);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden; 
+    margin: 0 auto;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    padding-bottom: 10px;
+    flex: 1;
+}
+
+/* Button Styles */
+#add-contact-button,
+#save-notes-button,
+#follow-up-button,
+#set-appointment-button,
+#draft-button,
+#send-button,
+#confirm-appointment-button {
+    width: 200px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Add Contact Button */
+#add-contact-button {
+    background-color: var(--primary-color);
+    color: var(--highlight-color);
+}
+
+#follow-up-button {
+    background: linear-gradient(135deg, #00b894, #009b77); 
+    color: var(--highlight-color);
+}
+
+#save-notes-button {
+    background: var(--coral-color);
+    color: var(--highlight-color);
+}
+
+.confirm-button {
+    background-color: #007bff;
+    color: var(--highlight-color);
+}
+
+#draft-button {
+    background-color: var(--coral-color);
+    color: var(--highlight-color);
+}
+
+#send-button {
+    background: linear-gradient(135deg, #00b894, #009b77);
+    color: var(--highlight-color);
+}
+
+/* Form and Lists */
+#form,
+#contact-list,
+#contact-details {
+    background-color: var(--section-bg-color);
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 280px;
+    overflow-y: auto;
+}
+
+#form {
+    flex: 1;
+}
+
+#contact-list {
+    flex: 0.8;
+}
+
+#contact-details {
+    flex: 1;
+}
+
+/* Input and Textarea */
+input,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.follow-up-container,
+.appointment-container {
+    border: 2px solid var(--border-color);
+    margin-top: 15px;
+}
+
+.date-picker-container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.appointment-date {
+    background-color: var(--coral-color);
+    width: 100%;
+    color: white;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#contact-details,
+.follow-up-container,
+.appointment-container {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Contact Item */
+.contact-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--highlight-color);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    transition: transform 0.2s ease;
+}
+
+.delete-btn {
+    background-color: var(--danger-color);
+    color: var(--highlight-color);
+    padding: 5px 10px;
+    font-size: 0.7em;
+    min-width: 50px;
+}
+
+#toggle-form-add,
+#toggle-form-list,
+#toggle-form-details,
+#toggle-form-email,
+#toggle-form-appointment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #34495e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#toggle-form-add:hover,
+#toggle-form-list:hover,
+#toggle-form-details:hover,
+#toggle-form-email:hover,
+#toggle-form-appointment:hover {
+    background-color: #2c3e50;
+    transform: translateY(-2px);
+}
+
+#toggle-form-add:active,
+#toggle-form-list:active,
+#toggle-form-details:active,
+#toggle-form-email:active,
+#toggle-form-appointment:active {
+    transform: translateY(0);
+}
+
+/* Calendar Styles */
+#modal-calendar {
+    max-width: 90%;
+    margin: auto;
+}
+
+.fc {
+    font-family: Arial, sans-serif;
+}
+
+.fc-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.fc-dayGrid-day {
+    cursor: pointer;
+}
+
+.fc-dayGrid-day:hover {
+    background-color: #f0f8ff;
+}
+
+.fc-dayGrid-event {
+    background-color: #3788d8;
+    border: none;
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.fc-dayGrid-day.fc-day-today {
+    background-color: #ffebcd;
+}
+
+/* Date Picker Styles */
+.date-picker-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-color-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .content-wrapper {
+        flex-direction: column;
+        height: auto;
+        gap: 15px;
+    }
+
+    #form,
+    #contact-list,
+    #contact-details {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .button-container {
+        flex-wrap: wrap;
+    }
+
+    .button-container button {
+        width: 100%;
+    }
+
+    body {
+        padding: 5px;
+    }
+
+    .container {
+        padding: 5px;
+        min-height: 100vh;
+        overflow-y: auto;
+    }
+
+    .date-button {
+        padding: 12px 16px;
+    }
+    
+    #selected-date {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .appointment-container {
+        padding: 1rem;
+    }
+
+    .calendar-button, .confirm-button {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+}

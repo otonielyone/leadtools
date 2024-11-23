@@ -1,0 +1,992 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;700&display=swap');
+
+body {
+  color: none; /* Set global text color to white */
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+  text-decoration: none; /* Removes underline from links */
+}
+
+
+/* HEADER */
+h1, h2, p {
+  margin: 10px auto;
+  padding: 0;
+  overflow: hidden; /* or auto */
+  text-align: center; /* Center align heading text */
+  overflow-wrap: break-word;
+  font-weight: 300; /* Consistent font-weight */
+}
+
+
+.styled-line {
+  border: none; /* Remove default border */
+  border-top: 1px solid #c5cace; /* Solid line with desired color and thickness */
+  margin-bottom: 10px; /* Adjust space above and below the line */
+  width: 100%; /* Full width */
+}
+
+
+.info-section p {
+  font-size: 8px; /* Smaller font size */
+  margin-top: 15px;
+}
+
+.popup-row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px; /* Space between rows */
+}
+
+.popup-item {
+  text-align: center; /* Center align titles and values */
+  flex: 1; /* Flex grow to evenly distribute space */
+}
+
+.popup-title {
+  font-weight: bold;
+  margin-bottom: 5px; /* Space below the title */
+}
+
+.popup-value {
+  font-size: 14px; /* Adjust the font size of the value */
+}
+
+/* Popup Styles */
+.popup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+}
+
+.popup-content {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 80%;
+  max-height: 80%;
+  overflow-y: auto;
+}
+
+.popup-gallery img {
+  width: 150px;
+  height: 150px;
+  margin: 5px;
+}
+
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.popup-text {
+  padding: 20px 0;
+  font-size: 12px; /* General text, smaller for mobile */
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
+.popup-text p {
+  width: 60%;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  white-space: normal; /* Allow paragraphs to wrap properly */
+  overflow-x: hidden; /* Hide horizontal overflow */
+}
+
+.popup-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px; /* Increased for better separation */
+}
+
+.popup-gallery img {
+  width: 150px;
+  height: auto;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.popup-gallery img:hover {
+  opacity: 0.8;
+}
+
+.lb-outerContainer {
+  position: relative; /* Ensure positioning context for child elements */
+  width: 413px;
+  height: 548px;
+}
+
+
+.lb-dataContainer {
+  position: absolute; /* Position absolutely within .lb-outerContainer */
+  top: 0; /* Align to the top */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Centering adjustment */
+  width: 728px; /* Fixed width for your container */
+  padding: 10px; /* Optional padding for spacing */
+  z-index: 1000; /* Ensure it's above other elements */
+}
+
+.lb-data {
+  display: flex; /* Flexbox layout */
+  flex-direction: column; /* Column layout */
+  align-items: center; /* Center items horizontally */
+}
+
+.lb-number {
+  color: white !important; /* Text color for better contrast */
+  font-size: 14px; /* Adjust size if necessary */
+  margin: 5px 0; /* Add margin for spacing */
+  z-index: 1001 !important; /* Ensure it's above other elements */
+
+}
+
+.lb-closeContainer {
+  position: absolute; /* Position the close button absolutely */
+  top: 10px; /* Distance from the top */
+  right: 10px; /* Distance from the right */
+}
+
+
+.lb-close {
+  display: block;
+  width: 30px; /* Width of the close button */
+  height: 30px; /* Height of the close button */
+  background: #fff; /* Background color */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 24px; /* Font size for the '×' symbol */
+  line-height: 30px; /* Align the text vertically */
+  text-align: center; /* Center the text horizontally */
+  position: relative; /* Ensure relative positioning within the container */
+  top: 5px;
+  left: -20px; /* Shift the button 1 inch to the left (approx. 96 pixels) */
+}
+
+.lb-close:hover {
+  background-color: #eee; /* Background color on hover */
+}
+
+
+.service-container h1 {
+  padding: 10px;
+  padding-bottom: 20px;
+}
+.site-header {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.nav-item .nav-item-text,
+.contact-title {
+  text-decoration: none; /* Removes underline from links */
+  background: transparent;
+  font-size: 12px;
+  text-align: left;
+  padding: 0; /* Use '0' instead of 'none' */
+  font-weight: 500;
+}
+
+a:hover,
+a:active,
+.button-link:hover,
+.button-link:active,
+.button-text:hover,
+.button-text:active,
+.menu-link:hover,
+.menu-link:active,
+.menu-item:hover,
+.menu-item:active {
+  color: inherit; /* Inherit color from parent */
+  background-color: rgba(255, 255, 255, 0.1); /* Fade effect on hover and active */
+  text-decoration: none; /* Ensure no underline or decoration */
+  overflow: hidden; /* or auto */
+}
+
+/* Ensure links have a consistent color across states */
+a,
+a:active,
+a:hover,
+a:focus {
+  color: inherit; /* Inherit color from parent */
+  text-decoration: none; /* Ensure no underline or decoration */
+}
+
+
+/* HEADINGS */
+.main-heading, .sub-heading {
+  font-size: 36px;
+  margin: 10px 0;
+  font-weight: 500; /* Thicker weight for headings */
+  background: none; /* Ensure no background color */
+  padding: 0; /* Remove padding if any */
+}
+
+.sub-heading {
+  font-size: 24px;
+  margin-top: 25px; /* Add margin on top to separate from main heading */
+  margin-bottom: 35px; /* Add margin on bottom to separate from main heading */
+}
+
+
+
+/* Menu Links */
+.menu-link a {
+  display: block; /* Ensures the anchor tag fills the menu item container */
+  text-align: left; /* Aligns text inside the anchor tag to the left */
+  text-decoration: none;
+}
+
+.menu-link {
+  margin: 15px;
+  font-weight: 1000px;
+  color: #ffffff; /* White text color */
+  text-decoration: none;
+}
+
+.menu-bar {
+  margin: 20px;
+}
+
+/* Menu Item Styling */
+.menu-item {
+  display: block;
+  padding: 10px 20px; /* Increase left padding for indentation */
+  color: #ffffff; /* White text color */
+  text-transform: uppercase; /* Uppercase text */
+  text-align: left;
+  background: transparent; /* Transparent background */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+
+/* Hamburger Menu */
+.hamburger-menu {
+  display: none; /* Hide by default, show on mobile */
+  cursor: pointer;
+  text-align: left;
+  padding: 15px;
+  position: fixed;
+  top: 0; /* Position at the top */
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* High z-index to ensure it floats above other content */
+}
+
+.hamburger-menu .bar {
+  background-color: rgba(255, 255, 255, 0.6); /* Semi-transparent white bars */
+  height: 3px; /* Bar height */
+  width: 25px; /* Bar width */
+  margin: 5px 0; /* Space between bars */
+  border-radius: 2px; /* Rounded corners */
+}
+
+.hamburger-menu.active .bar {
+  background-color: #ffffff9c; /* White or desired color when active */
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  padding: 20px;
+  display: none; /* Hide by default */
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1000; /* High z-index to ensure it floats above other content */
+  background-color: rgba(0, 0, 0, 0.7); /* Dark background */
+  transition: transform 0.3s ease;
+  transform: translateY(-100%);
+}
+
+.mobile-menu.active {
+  display: block; /* Show when active */
+  transform: translateY(0);
+}
+
+/* Menu Bar */
+.menu-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  background: transparent; /* Transparent background */
+  position: fixed; /* Fixed position */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure it floats above other content */
+}
+
+/* Hide scrollbars in menu bar */
+.menu-bar::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in WebKit browsers */
+}
+
+.menu-bar {
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+}
+
+/* Close icon styles */
+.close-menu {
+  position: absolute; /* Position it in the top-right corner */
+  top: 25px;
+  right: 70px;
+  font-size: 25px; /* Adjust size as needed */
+  color: white; /* White color for the 'X' */
+  cursor: pointer; /* Change cursor to pointer to indicate clickability */
+  z-index: 2100; /* Ensure it's above other elements in the menu */
+}
+
+
+.gallery-img {
+    border: 3px solid #a8b8c6;
+    box-shadow: 0 0 10px rgba(168, 184, 198, 0.7);
+}
+
+
+.construction-text {
+  color: red;
+}
+
+
+
+/* Custom Section with Background Image */
+.custom-section {
+  background-image: url('/static/icons/rental-custom.jpg');
+  background-size: cover;
+  background-position: center;
+  margin: 0;
+  color: white;
+  padding: 25px;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative; /* Position relative for absolute positioning of text */
+  overflow: hidden; /* Hide overflow */
+}
+.custom-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1440px;
+  background: none;
+  overflow: hidden; /* Ensure no overflow */
+  box-sizing: border-box;
+}
+
+
+/* Row to handle horizontal scrolling */
+.custom-row {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent wrapping */
+  gap: 20px;
+  margin: 0; /* Remove margins for alignment */
+  width: 100%; /* Full width of the container */
+  overflow-x: auto; /* Add horizontal scrollbar if content overflows */
+  overflow-y: hidden; /* Hide vertical scrollbar */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+}
+
+.custom-row::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in WebKit browsers */
+}
+
+/* Column styling */
+.custom-column {
+  flex: 0 0 375px; /* Fixed width for columns */
+  height: 200px;
+  background: transparent;
+  text-align: center;
+  margin: 0 auto; /* Center column horizontally */
+  position: relative; 
+  border: 2px solid #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Space out content vertically */
+  padding: 0 20px; /* Add padding for alignment */
+}
+
+/* Icon Wrapper */
+.custom-icon-widget {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center icon vertically within the space */
+  height: calc(100% - 40px); /* Adjust based on the height of the button and desired spacing */
+}
+
+
+/* Icon Styling */
+.custom-icon-homepage,
+.custom-icon-home,
+.custom-icon-rentals,
+.custom-icon-head,
+.custom-icon-contact {
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: brightness(0) invert(1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* Center icon horizontally */
+}
+
+.custom-icon-homepage {
+  background-image: url('/static/icons/home.png');
+  width: 60px;
+  height: 60px;
+}
+
+.custom-icon-home {
+  background-image: url('/static/icons/search.png');
+  width: 95px;
+  height: 95px;
+}
+
+.custom-icon-head {
+  background-image: url('/static/icons/head.png');
+  width: 100px;
+  height: 100px;
+}
+
+.custom-icon-contact {
+  background-image: url('/static/icons/contact.png');
+  width: 105px;
+  height: 105px;
+}
+
+.custom-icon-rentals {
+  background-image: url('/static/icons/hand.png');
+  width: 85px;
+  height: 85px;
+}
+
+/* Button Link Styling */
+.custom-button-link {
+  font-size: 14px;
+  line-height: 40px;
+  font-weight: bold;
+  width: 200px;
+  box-sizing: border-box;
+  text-decoration: none;        
+  background: none;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  overflow: hidden; /* or auto */
+  border-radius: 1px;
+  display: block; /* Ensure it takes up space as a block element */
+  text-align: center; /* Center text inside the button */
+  margin: 0 auto; /* Center button horizontally */
+  margin-bottom: 25px; /* Fixed margin from the bottom */
+}
+
+
+/* Button Group */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin: 25px 0;
+}
+
+.button-link {
+  text-decoration: none;
+  background: none;
+  width: 250px; /* Fixed width for all buttons */
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1px;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  font-size: 14px;
+  box-sizing: border-box;
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide overflow if text exceeds button width */
+  text-overflow: ellipsis; /* Add ellipsis if text overflows */
+}
+
+
+.custom-button-link:active a {
+  color: #ffffff;
+  text-decoration: none;
+  justify-content: center;
+}
+
+
+.button-text:active a {
+  color: #ffffff;
+  text-decoration: none;
+  justify-content: center;
+  overflow: hidden; /* or auto */
+}
+
+/* Language Icon */
+.language-icon img {
+  width: 24px;
+}
+
+/* Video Background Section */
+.video-background-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.video-background-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/* Overlay Content */
+.overlay-content {
+  position: absolute;
+  z-index: 1;
+  color: #ffffff;
+  text-align: center;
+  padding: 20px;
+  width: 100%; /* Ensure full width for centering */
+  height: 100%; /* Ensure full height for vertical centering */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center both horizontally and vertically */
+  box-sizing: border-box;
+}
+
+/* Image/Video Background Container */
+.image-header-container {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden;
+  margin: 0;
+  display: flex;
+  align-items: center; /* Vertically center content */
+  justify-content: center; /* Center horizontally */
+}
+
+/* Placeholder style */
+.placeholder {
+  display: flex; /* Use flexbox for centering */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: 50vh; /* Take up the full viewport height */
+  width: 100vw; /* Take up the full viewport width */
+  text-align: center; /* Center text horizontally */
+  z-index: 1000;
+}
+
+
+
+/* Footer Styling */
+.footer {
+  background-color: #333333;
+  color: #ffffff;
+  padding: 20px 0;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap; /* Allow columns to wrap */
+  justify-content: space-between; /* Space out columns evenly */
+  padding: 0 20px; /* Add padding for spacing */
+  gap: 20px; /* Add gap between columns */
+}
+
+.footer-column {
+  flex: 1 1 auto; /* Allow columns to grow and shrink, with a base width of 200px */
+  padding: 0 0px; /* Add padding for spacing */
+  box-sizing: border-box; /* Include padding in width calculation */
+  text-align: left;
+  justify-content: center;
+  align-content: center;
+}
+
+
+.footer-heading {
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.footer-nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.footer-nav li {
+  margin-bottom: 5px;
+}
+
+.footer-nav a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.footer-nav a:hover {
+  color: #ffffff;
+}
+
+.footer-info {
+  font-size: 12px; /* Ensure this matches the text size below "BROWSE" */
+  text-align: left !important;
+}
+
+.footer-info p {
+  margin: 5px 0;
+  text-align: left !important;
+  line-height: 1.6;
+}
+
+
+.footer-image {
+  max-width: 100px; /* Limit image width */
+  height: 100px;
+  display: block; /* Ensure block display */
+  margin: 0 auto; /* Center images horizontally if needed */
+}
+
+.hidden {
+  opacity: 0; /* Make it invisible */
+  pointer-events: none; /* Prevent it from blocking interactions */
+  display: none; /* Hides the element */}
+
+
+.content-disclosure {
+  font-size: 10px;
+  padding: 10px;
+  color: white;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.custom-strong {
+  font-weight: 500;
+  margin: 5px;
+}
+
+
+#header-info-container {
+  display: flex;              /* Enable flexbox */
+  flex-direction: column;     /* Arrange children vertically */
+  align-items: center;        /* Center horizontally */
+  text-align: center;         /* Center text */
+  margin-top: 10px; 
+  margin-bottom: 20px; 
+  padding: 10px 0; 
+  border-radius: 8px; 
+  max-width: 1000px;
+  margin-left: auto;          /* Center the container */
+  margin-right: auto;         /* Center the container */
+
+}
+
+.header-text {
+  color: white;
+  font-size: 16px;
+  width: auto; /* Change this to auto or a specific value */
+  max-width: 100%; /* Ensure it doesn't exceed the parent width */
+  text-align: center; /* Center text */
+  margin-left: auto; /* Center horizontally */
+  margin-right: auto; /* Center horizontally */
+  width: 60vw;
+}
+
+.header-logo {
+  width: 350px;  /* Set desired width */
+  height: auto;  /* Maintain aspect ratio */
+  display: block; 
+  margin: 10px auto 0; /* Center the image and add space above */
+}
+
+
+
+/* Landscape mode for devices with a max-width of 908px */
+@media screen and (max-width: 908px) and (orientation: landscape) {
+  .image-header-container {
+    height: 100vw; /* Use viewport width for height in landscape mode */
+  }
+
+  .menu-bar {
+    display: none; /* Hide the menu bar */
+    overflow: hidden;
+  }
+  
+
+  .hamburger-menu {
+    display: block; /* Show the hamburger menu on mobile view */
+    overflow: hidden;
+  }  
+
+
+  .hamburger-menu.active {
+    background-color: transparent; /* Replace 'None' with 'transparent' or desired color */
+  }
+
+  .hamburger-menu.active .bar {
+    background-color: transparent; /* Replace 'None' with 'transparent' or desired color */
+  }
+
+  .header-logo {
+    width: 200px;  /* Set desired width */
+    height: auto;  /* Maintain aspect ratio */
+    display: block; 
+    margin: 10px auto 0; /* Center the image and add space above */
+  }
+
+  .header-text {
+    color: white;
+    font-size: 10px;
+    margin: 2px;
+  }
+}
+
+
+
+/* Wide screens (e.g., Galaxy Fold sideways) */
+@media screen and (min-width: 1469px) {
+  .image-header-container {
+    height: 100vw; /* Use viewport width for height in landscape mode */
+  }
+
+  .menu-bar {
+    display: none; /* Hide the menu bar */
+    overflow: hidden;
+  }
+  
+  .hamburger-menu {
+    display: block; /* Show the hamburger menu on mobile view */
+    overflow: hidden;
+  }
+
+  .hamburger-menu.active {
+    background-color: transparent; /* Replace 'None' with 'transparent' or desired color */
+  }
+
+  .hamburger-menu.active .bar {
+    background-color: transparent; /* Replace 'None' with 'transparent' or desired color */
+  }
+
+  .header-text {
+    color: white;
+    font-size: 10px;
+    margin: 2px;
+  }
+}
+
+
+/* Mobile view for screens up to 768px wide */
+@media screen and (max-width: 768px) {
+  .image-header-container {
+    height: 100vh; /* Use viewport height for mobile view */
+  }
+      
+  .menu-bar {
+    display: none; /* Hide the menu bar */
+  }
+
+  .hamburger-menu {
+    display: block; /* Show the hamburger menu */
+  }
+
+  .hamburger-menu.active {
+    background-color: transparent; /* Replace 'None' with 'transparent' or desired color */
+  }
+
+  .hamburger-menu.active .bar {
+    background-color: transparent; /* Replace 'None' with 'transparent' or desired color */
+  }
+
+  .header-logo {
+    width: 200px;  /* Set desired width */
+    height: auto;  /* Maintain aspect ratio */
+    display: block; 
+    margin: 10px auto 0; /* Center the image and add space above */
+  }
+
+  .header-text {
+    color: white;
+    font-size: 10px;
+    margin: 2px;
+  }
+}
+
+/* Portrait mode for very small screens (e.g., Galaxy Fold front thin screen) */
+@media screen and (max-width: 500px) and (orientation: portrait) {
+  .image-header-container {
+    height: 100vh; /* Use viewport height for portrait mode */
+
+  }
+
+  .menu-bar {
+    display: none; /* Hide the menu bar */
+  }
+
+  .hamburger-menu {
+    display: block; /* Show the hamburger menu */
+  }
+
+  /* HEADINGS */
+  .main-heading {
+    font-size: 30px;
+    margin: 10px 0;
+    font-weight: 500; /* Thicker weight for headings */
+    background: none; /* Ensure no background color */
+    padding: 0; /* Remove padding */
+  }
+
+  .sub-heading {
+    font-size: 20px;
+    margin: 25px 0; /* Add margin above and below to separate from main heading */
+  }
+
+  .button-link {
+    width: 200px; /* Fixed width for buttons */
+    height: 50px;
+    font-size: 14px;
+  }
+
+  .custom-column {
+    flex: 1 1 100%; /* Each column takes 100% of width */
+    max-width: 100%; /* Ensure each column does not exceed 100% width */
+  }
+  
+  /* Adjust footer styling for small screens */
+  .footer {
+    text-align: center !important; /* Center align footer content */
+    padding: 50px;
+  }
+
+  .footer-content {
+    flex-direction: column; /* Stack footer columns vertically */
+    align-items: center; /* Center align columns */
+    margin: 0 !important;
+    height: auto; /* Optional: Limit max width for better appearance */
+    padding: 0 !important;  
+  }
+
+
+  .footer-column, .footer-text, .footer-info, .footer-nav .footer-heading {
+    width: 100%; /* Full width for each column */
+    max-width: 300px; /* Optional: Limit max width for better appearance */
+    text-align: center !important; /* Center text inside each column */
+  }
+
+
+  .footer-info p {
+    text-align: center !important; /* Center text inside each column */
+  }
+
+
+  .custom-icon-homepage {
+    background-image: url('/static/icons/home.png');
+    width: 35px;
+    height: 35px;
+  }
+
+  .custom-icon-home {
+    background-image: url('/static/icons/search.png');
+    width: 65px;
+    height: 65px;
+  }
+
+  .custom-icon-head {
+    background-image: url('/static/icons/head.png');
+    width: 70px;
+    height: 70px;
+  }
+
+  .custom-icon-contact {
+    background-image: url('/static/icons/contact.png');
+    width: 75px;
+    height: 75px;
+  }
+
+  .custom-icon-rentals {
+    background-image: url('/static/icons/hand.png');
+    width: 55px;
+    height: 55px;
+  }
+
+  /* Column styling */
+  .custom-column {
+    height: 150px;
+  }
+
+  
+  .hamburger-menu.active {
+    background-color: transparent; /* Replace 'None' with 'transparent' or desired color */
+  }
+
+  .hamburger-menu.active .bar {
+    background-color: transparent; /* Replace 'None' with 'transparent' or desired color */
+  }
+
+  .close-menu {
+    position: absolute; /* Position it in the top-right corner */
+    top: 10px;
+    right: 55px;
+    font-size: 15px; /* Adjust size as needed */
+  } 
+
+    /* Menu Item Styling */
+  .menu-item {
+    padding-top: 10px; 
+    padding-bottom: 10px; /* Increase left padding for indentation */
+    padding-left: 0;
+    margin-left: 0;
+  }
+  
+  .button-link {
+    border: 1px solid #ffffff;
+  }
+
+  .header-logo {
+    width: 150px;  /* Set desired width */
+    height: auto;  /* Maintain aspect ratio */
+    display: block; 
+    margin: 10px auto 0; 
+  }
+
+  .header-text {
+    color: white;
+    font-size: 10px;
+    margin: 2px;
+  }
+    
+}

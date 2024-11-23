@@ -1,0 +1,89 @@
+    <style>
+
+    </style>
+
+
+    <td class="lead-classification">
+    <div class="classification-buttons">
+        <button 
+            class="classify-btn no-answer-btn" 
+            data-mls="{{ listing.MLS }}" 
+            data-owner-names="{{ listing.Owner_Names }}"
+            data-owner-phone="{{ listing.Owner_Phone }}">
+            No-Answer
+        </button>
+        <button 
+            class="classify-btn possible-lead-btn" 
+            data-mls="{{ listing.MLS }}" 
+            data-owner-names="{{ listing.Owner_Names }}"
+            data-owner-phone="{{ listing.Owner_Phone }}">
+            Possible Lead
+        </button>
+        <button 
+            class="classify-btn no-lead-btn" 
+            data-mls="{{ listing.MLS }}" 
+            data-owner-names="{{ listing.Owner_Names }}"
+            data-owner-phone="{{ listing.Owner_Phone }}">
+            No Lead
+        </button>
+    </div>
+</td>
+
+
+<td>
+    <button 
+        class="add-to-crm" 
+        data-mls="{{ listing.MLS }}" 
+        data-owner-names="{{ listing.Owner_Names }}" 
+        data-owner-phone="{{ listing.Owner_Phone }}"
+        data-added="false">Add to CRM</button>
+</td>
+
+
+
+// Add to CRM functionality
+            $('#basicInfoTable').on('click', '.add-to-crm', async function(e) {
+                const button = $(this);
+                
+                // Prevent multiple submissions
+                if (button.data('added') === true || button.hasClass('btn-done')) {
+                    return;
+                }
+
+                // Disable button immediately
+                button.prop('disabled', true);
+
+                // Get data attributes
+                const contactData = {
+                    name: button.data('owner-names'),
+                    email: button.data('owner-phone'),
+                    notes: button.closest('tr').find('.notes-textarea').val() || ''
+                };
+
+                try {
+                    const response = await fetch('/create_contacts/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify(contactData)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    // Mark as added and update button appearance
+                    button.data('added', true)
+                          .addClass('btn-done')
+                          .text('Done')
+                          .prop('disabled', true);
+
+                } catch (error) {
+                    console.error('Failed to add contact:', error);
+                    // Re-enable button on error
+                    button.prop('disabled', false);
+                }
+            });
+

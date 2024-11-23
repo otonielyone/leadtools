@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Listings</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="static/css/leads_tab1.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <div class="loading-message"><br>Retrieving leads...</div>    
+    </div>
+
+    <div class="container">
+        <h1 class="banner">LEADTOOLS</h1>
+
+        <!-- Leads Section -->
+        <div id="tab1" class="tab-content active">
+            <form id="leadsForm" action="/api/populate_leads_database" method="get">
+                <button class="get" type="submit" id="startButton">Generate New Leads</button>
+            </form>
+
+            <!-- Toggle buttons for sections -->
+            <button id="toggle-possible-lead">Possible Lead</button>
+            <div id="possible-lead-list" style="display: none;">
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in possible_entries %}
+                            <tr>
+                                <td>{{ entry.customer_name }}</td>
+                                <td>{{ entry.customer_email if entry.customer_email else 'no email found' }}</td>
+                                <td>{{ entry.customer_phone }}</td>
+                                <td>{{ entry.customer_notes }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <button id="toggle-no-lead">No Lead</button>
+            <div id="no-lead-list" style="display: none;">
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in no_answer_entries %}
+                            <tr>
+                                <td>{{ entry.customer_name }}</td>
+                                <td>{{ entry.customer_email if entry.customer_email else 'no email found' }}</td>
+                                <td>{{ entry.customer_phone }}</td>
+                                <td>{{ entry.customer_notes }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <button id="toggle-no-answer">No Answer</button>
+            <div id="no-answer-list" style="display: none;">
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in no_answer_entries %}
+                            <tr>
+                                <td>{{ entry.customer_name }}</td>
+                                <td>{{ entry.customer_email if entry.customer_email else 'no email found' }}</td>
+                                <td>{{ entry.customer_phone }}</td>
+                                <td>{{ entry.customer_notes }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Leads Table -->
+            <div class="table-container">
+                <table id="basicInfoTable" class="display" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>MLS</th>
+                            <th>Status</th>
+                            <th>Owner Phone</th>
+                            <th>Owner Name</th>
+                            <th>Owner Info</th>
+                            <th>Prior Agent</th>
+                            <th class="notes-column">Notes</th>
+                            <th class="crm-column">Classify</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for listing in leads %}
+                            {% if listing.Owner_Phone %}
+                            <tr>
+                                <td style="position: relative;">
+                                    <span class="toggle mls-toggle" data-target="remarksDetails{{ loop.index }}">+</span>
+                                    {{ listing.MLS }}
+                                    <div class="remarks-content toggle-content" id="remarksDetails{{ loop.index }}" style="display: none;">
+                                        <p>Remarks: {{ listing.Remarks }}</p>
+                                    </div>
+                                </td>
+                                
+                                <td>{{ listing.Status }}</td>
+                                <td>{{ listing.Owner_Phone }}</td>
+
+                                <td style="position: relative;">
+                                    <span class="toggle owner-toggle" data-target="ownerNameDetails{{ loop.index }}">+</span>
+                                    Owner Name
+                                    <div class="owner-details toggle-content" id="ownerNameDetails{{ loop.index }}" style="display: none;">
+                                        <p>Owner Name: {{ listing.Owner_Names }}</p>
+                                        <p>First Name: {{ listing.Owner_First_Name }}</p>
+                                        <p>Last Name: {{ listing.Owner_Last_Name }}</p>
+                                    </div>
+                                </td>
+
+                                <td style="position: relative;">
+                                    <span class="toggle owner-info-toggle" data-target="ownerInfoDetails{{ loop.index }}">+</span>
+                                    Owner Info
+                                    <div class="owner-info toggle-content" id="ownerInfoDetails{{ loop.index }}" style="display: none;">
+                                        <p>Sale Amount: {{ listing.Sale_Amount }}</p>
+                                        <p>List Price: {{ listing.List_Price }}</p>
+                                        <p>Owner Occupied: {{ listing.Owner_Occupied }}</p>
+                                        <p>Owner Address: {{ listing.Owner_Address }}</p>
+                                    </div>
+                                </td>
+
+                                <td style="position: relative;">
+                                    <span class="toggle prior-agent-toggle" data-target="priorAgentDetails{{ loop.index }}">+</span>
+                                    Prior Agent Details
+                                    <div class="prior-agent-details toggle-content" id="priorAgentDetails{{ loop.index }}" style="display: none;">
+                                        <p>Agent Name: {{ listing.Agent_Name }}</p>
+                                        <p>Office Name: {{ listing.Office_Name }}</p>
+                                    </div>
+                                </td>
+
+                                <td class="notes-column">
+                                    <button class="add-notes" data-mls="{{ listing.MLS }}">Notes</button>
+                                    <div class="notes-input toggle-content" style="display: none;">
+                                        <div class="buttons-container">
+                                            <textarea id="notes-{{ listing.MLS }}" rows="2" placeholder="Enter your notes here..." class="notes-textarea"></textarea>
+                                            <button class="save-notes" data-mls="{{ listing.MLS }}">Save</button>
+                                            <button class="delete-notes" data-mls="{{ listing.MLS }}">Delete</button>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td class="lead-classification">
+                                    <div class="classification-buttons">
+                                        <button class="classify-btn possible-lead-btn" data-mls="{{ listing.MLS }}" data-owner-names="{{ listing.Owner_Names }}" data-owner-phone="{{ listing.Owner_Phone }}" data-owner-email="{{ listing.Owner_Email if listing.Owner_Email else 'no email found' }}" data-section="possible_leads">
+                                            Possible Lead
+                                        </button>
+                                        <button class="classify-btn no-lead-btn" data-mls="{{ listing.MLS }}" data-owner-names="{{ listing.Owner_Names }}" data-owner-phone="{{ listing.Owner_Phone }}" data-owner-email="{{ listing.Owner_Email if listing.Owner_Email else 'no email found' }}" data-section="no_leads">
+                                            No Lead
+                                        </button>
+                                        <button class="classify-btn no-answer-btn" data-mls="{{ listing.MLS }}" data-owner-names="{{ listing.Owner_Names }}" data-owner-phone="{{ listing.Owner_Phone }}" data-owner-email="{{ listing.Owner_Email if listing.Owner_Email else 'no email found' }}" data-section="no_answer">
+                                            No-Answer
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Section -->
+    <script>
+        $(document).ready(function () {
+            // DataTable initialization for lead table
+            const table = $('#basicInfoTable').DataTable({
+                pageLength: 10,
+                responsive: true,
+                initComplete: function () {
+                    $('#loader').hide();
+                    $('#basicInfoTable').show();
+                    $('.toggle-content').hide();
+                }
+            });
+
+            // Toggle for list sections (Possible Lead, No Lead, etc.)
+            ['possible-lead', 'no-lead', 'no-answer'].forEach(section => {
+                $(`#toggle-${section}`).click(function() {
+                    $(`#${section}-list`).toggle();
+                });
+            });
+
+            // Toggle for each content section like MLS, Owner Info, Prior Agent
+            $('#basicInfoTable').on('click', '.toggle', function () {
+                const target = $(this).data('target');
+                const content = $('#' + target);
+                content.toggle();
+                $(this).text(content.is(':visible') ? '-' : '+');
+            });
+
+            $('.classify-btn').on('click', function () {
+                const mls = $(this).data('mls');
+                const ownerNames = $(this).data('owner-names');
+                const ownerPhone = $(this).data('owner-phone');
+                const ownerEmail = $(this).data('owner-email');
+                const ownerNotes = $(this).data('owner-notes');
+                const section = $(this).data('section');  // Still keep section to classify into the correct group
+
+                // Construct the payload to send to the backend (no status now)
+                const data = {
+                    mls: mls,
+                    owner_names: ownerNames,
+                    owner_phone: ownerPhone,
+                    owner_email: ownerEmail,
+                    owner_notes: ownerNotes,
+                    section: section  // The section like "possible_leads", "no_leads", etc.
+                };
+
+                $.ajax({
+                    url: `/create_entry?section=${section}`,  // Send 'section' as a query parameter
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        console.log('Entry saved successfully:', response);
+                    },
+                    error: function () {
+                        console.error('Error saving lead entry');
+                    }
+                });
+            });
+
+            // Notes functionality - Show/Save/Delete notes
+            function handleNotes(action, identifier, notes = null) {
+                let url = '';
+                const data = { [identifier.includes('@') ? 'email' : 'mls']: identifier };
+
+                if (action === 'get') {
+                    url = identifier.includes('@') ? '/get_customer_notes' : '/get_notes';
+                    if (notes) data.notes = notes;
+                } else if (action === 'save') {
+                    url = identifier.includes('@') ? '/save_customer_notes' : '/save_notes';
+                    data.notes = notes;
+                } else if (action === 'delete') {
+                    url = identifier.includes('@') ? '/delete_customer_notes' : '/delete_notes';
+                }
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        if (action === 'get' && response.notes) {
+                            $('#notes-' + identifier).val(response.notes);  // Populates the notes input field
+                        }
+                    },
+                    error: function () {
+                        console.error(`Failed to ${action} notes.`);
+                    }
+                });
+            }
+
+            // Save notes handler
+            $('#basicInfoTable tbody').on('click', '.save-notes', function () {
+                const mls = $(this).data('mls');
+                const notes = $('#notes-' + mls).val();
+                handleNotes('save', mls, notes);
+            });
+
+            // Delete notes handler
+            $('#basicInfoTable tbody').on('click', '.delete-notes', function () {
+                const mls = $(this).data('mls');
+                handleNotes('delete', mls);
+                $('#notes-' + mls).val('');
+            });
+        });
+    </script>
+</body>
+</html>
