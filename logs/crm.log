@@ -1,5 +1,0 @@
-2024-11-23 00:15:16,371 - start_files.routes.routes - INFO - Received data: {'owner_names': 'Wanda D Scholz', 'owner_phone': '(301) 365-9090', 'owner_email': 'no email found', 'mls': 'DCDC2147202'}, section: possible_leads
-2024-11-23 00:15:16,372 - start_files.routes.routes - ERROR - Error saving possible lead: Textual column expression 'possible_leads' should be explicitly declared with text('possible_leads'), or use column('possible_leads') for more specificity
-2024-11-23 00:17:29,366 - start_files.routes.routes - INFO - Received data: {'owner_names': 'Ava C Amin', 'owner_phone': '(301) 751-8246', 'owner_email': 'no email found', 'mls': 'MDCH2034672'}, section: possible_leads
-2024-11-23 00:17:57,261 - start_files.routes.routes - INFO - Received data: {'owner_names': 'Wanda D Scholz', 'owner_phone': '(301) 365-9090', 'owner_email': 'no email found', 'mls': 'DCDC2147202'}, section: no_leads
-2024-11-23 00:17:57,997 - start_files.routes.routes - INFO - Received data: {'owner_names': 'Wanda D Scholz', 'owner_phone': '(301) 365-9090', 'owner_email': 'no email found', 'mls': 'DCDC2147202'}, section: no_answer
