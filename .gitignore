@@ -7,5 +7,5 @@ start_files/static/images/
 start_files/static/homes_images/
 start_files/static/rentals_images/
 services/yonehomes-50e3014c6fd5.json
-# Ignore .env file
 .env
+.gitignore
