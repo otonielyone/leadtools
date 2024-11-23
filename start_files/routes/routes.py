@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import List
 from fastapi import APIRouter, Request, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse, HTMLResponse, StreamingResponse
@@ -118,6 +119,7 @@ async def view_leads(request: Request):
 
         possible_leads_data = db.query(Possible_leads).all()
         possible_entries = [{
+            'customer_id':entry.id,
             'customer_name': entry.name,
             'customer_phone': entry.phone,
             'customer_email': entry.email,
@@ -126,6 +128,7 @@ async def view_leads(request: Request):
 
         no_answer_data = db.query(No_answer).all()
         no_answer_entries = [{
+            'customer_id':entry.id,
             'customer_name': entry.name,
             'customer_phone': entry.phone,
             'customer_email': entry.email,
@@ -134,6 +137,7 @@ async def view_leads(request: Request):
 
         no_leads_data = db.query(No_leads).all()
         no_leads_entries = [{
+            'customer_id':entry.id,
             'customer_name': entry.name,
             'customer_phone': entry.phone,
             'customer_email': entry.email,
@@ -263,24 +267,99 @@ def save_data(data: dict, section):
 
 
 
+# Update sections to match the JavaScript code
 class AddToKvCoreRequest(BaseModel):
-    ids: List[int]  # List of selected entry IDs
+    ids: List[int]
     section: str
-    
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "ids": [1, 2, 3],
+                "section": "possible-lead"
+            }
+        }
+
 @router.post("/add_to_kvcore")
-async def add_to_kvcore(ids, section: AddToKvCoreRequest):
+async def add_to_kvcore(request: AddToKvCoreRequest):            
     try:
-        logger.info(f"Received data: {ids}, section: {section}")
-        return {"status": "success", "message": f"Entries added to {section} section"}
+
+        with leads_sessionLocal() as db:
+            for id in request.ids:
+
+                # Determine the correct table based on the section
+                if 'possible_leads' in request.section:
+                    table = Possible_leads
+                elif 'no_leads' in request.section:
+                    table = No_leads
+                elif 'no_answer' in request.section:
+                    table = No_answer
+                else:
+                    logger.error(f"Invalid section: {request.section}")
+                    return {
+                        "status": "error",
+                        "message": f"Invalid section provided: {request.section}"
+                    }
+        
+                id_found = db.query(table).filter_by(id=id).first()  # Query using the model class (section)
+                if id_found:
+                    logger.info(
+                        f"Variables --> Section: {table} and Ids: {id}"
+                    )
+            return {
+                "status": "success",
+                "message": f"Successfully added: {id} entries to KVCore"
+            }
     except Exception as e:
-        logger.error(f"Error processing request: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        logger.error(f"Error adding entries to KVCore: {str(e)}", exc_info=True)
+
 
 @router.post("/delete_entries")
 async def delete_entries(request: AddToKvCoreRequest):
-    try:
-        logger.info(f"Received data: {request.ids}, section: {request.section}")
-        return {"status": "success", "message": f"Entries deleted from {request.section} section"}
+    try:        
+        logger.info(
+            f"Deleting entries - Section: {request.section}, "
+            f"Ids: {request.ids}"
+        )
+        with leads_sessionLocal() as db:
+            deleted_ids = []
+            not_found_ids = []
+            
+            # Determine the correct table based on the section
+            if 'possible_leads' in request.section:
+                table = Possible_leads
+            elif 'no_leads' in request.section:
+                table = No_leads
+            elif 'no_answer' in request.section:
+                table = No_answer
+            else:
+                logger.error(f"Invalid section: {request.section}")
+                return {
+                    "status": "error",
+                    "message": f"Invalid section provided: {request.section}"
+                }
+            
+            for id in request.ids:
+                id_found = db.query(table).filter_by(id=id).first()
+                if id_found:
+                    db.delete(id_found)
+                    deleted_ids.append(id)
+                else:
+                    not_found_ids.append(id)
+            db.commit()
+        messages = []
+        if deleted_ids:
+            messages.append(f"Deleted entries: {', '.join(map(str, deleted_ids))}")
+        if not_found_ids:
+            messages.append(f"No entries found for IDs: {', '.join(map(str, not_found_ids))}")
+
+        return {
+            "status": "success",
+            "message": " ".join(messages) if messages else "No action performed."
+        }
     except Exception as e:
-        logger.error(f"Error processing request: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        logger.error(f"Error deleting entries: {str(e)}", exc_info=True)
+        return {
+            "status": "error",
+            "message": f"Error occurred: {str(e)}"
+        }
