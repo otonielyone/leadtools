@@ -29,7 +29,8 @@ Base = declarative_base()
 
 class Mls_leads(Base):
     __tablename__ = 'mls_leads'
-    mls = Column(String(20), primary_key=True, index=True) 
+    id = Column(Integer, primary_key=True, autoincrement=True)  
+    mls = Column(String(20), index=True) 
     sale_amt = Column(String(100), index=True)
     list_price = Column(Float, index=True)
     owner_phone = Column(String(100), index=True)
@@ -59,9 +60,11 @@ class Mls_leads(Base):
 class Possible_leads(Base):
     __tablename__ = 'possible_leads'
     id = Column(Integer, primary_key=True, autoincrement=True)  
+    mls = Column(String(20), index=True) 
     name = Column(String(100), index=True)
     phone = Column(String(20), index=True)
     email = Column(String(100), index=True)
+    address = Column(String(100), index=True)
     notes = Column(Text, default='')    
     
     def __repr__(self):
@@ -70,9 +73,11 @@ class Possible_leads(Base):
 class No_leads(Base):
     __tablename__ = 'no_leads'
     id = Column(Integer, primary_key=True, autoincrement=True)  
+    mls = Column(String(20), index=True) 
     name = Column(String(100), index=True)
     phone = Column(String(20), index=True)
     email = Column(String(100), index=True)
+    address = Column(String(100), index=True)
     notes = Column(Text, default='')    
     
     def __repr__(self):
@@ -80,10 +85,12 @@ class No_leads(Base):
     
 class No_answer(Base):
     __tablename__ = 'no_answer'
-    id = Column(Integer, primary_key=True, autoincrement=True)  
+    id = Column(Integer, primary_key=True, autoincrement=True) 
+    mls = Column(String(20), index=True) 
     name = Column(String(100), index=True)
     phone = Column(String(20), index=True)
     email = Column(String(100), index=True)
+    address = Column(String(100), index=True)
     notes = Column(Text, default='')    
     
     def __repr__(self):
@@ -116,7 +123,7 @@ def init_tables():
         with leads_sessionLocal() as db:
             connection = db.get_bind()
             inspector = inspect(connection)
-            tables_to_check = [Possible_leads, No_leads, No_answer]
+            tables_to_check = [Mls_leads, Possible_leads, No_leads, No_answer]
             for table in tables_to_check:
                 if not inspector.has_table(table.__tablename__):
                     logger.info(f"Table {table.__tablename__} does not exist. Creating it...")

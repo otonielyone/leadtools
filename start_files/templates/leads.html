@@ -32,13 +32,15 @@
                     <button class="add-to-kvcore-btn" data-section="possible_leads">Add to KVCore</button>
                     <button class="delete-selected-btn" data-section="possible_leads">Delete</button>
                 </div>
-                <table border="1">
+                <table border="0">
                     <thead>
                         <tr>
                             <th class="checkbox-column"><input type="checkbox" class="select-all" data-section="possible_leads"></th>
+                            <th>MLS</th>
                             <th>Customer Name</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>Address</th>
                             <th>Notes</th>
                         </tr>
                     </thead>
@@ -46,9 +48,11 @@
                         {% for entry in possible_entries %}
                             <tr>
                                 <td><input type="checkbox" class="entry-checkbox" data-section="possible_leads" data-entry-id="{{ entry.customer_id }}"></td>
+                                <td>{{ entry.customer_mls }}</td>
                                 <td>{{ entry.customer_name }}</td>
                                 <td>{{ entry.customer_email if entry.customer_email else 'no email found' }}</td>
                                 <td>{{ entry.customer_phone }}</td>
+                                <td>{{ entry.customer_address }}</td>
                                 <td>{{ entry.customer_notes }}</td>
                             </tr>
                         {% endfor %}
@@ -62,13 +66,15 @@
                     <button class="add-to-kvcore-btn" data-section="possible-leads">Add KVCore</button>
                     <button class="delete-selected-btn" data-section="possible-leads">Delete</button>
                 </div>
-                <table border="1">
+                <table border="0">
                     <thead>
                         <tr>
                             <th class="checkbox-column"><input type="checkbox" class="select-all" data-section="no_leads"></th>
+                            <th>MLS</th>
                             <th>Customer Name</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>Address</th>
                             <th>Notes</th>
                         </tr>
                     </thead>
@@ -76,9 +82,11 @@
                         {% for entry in no_answer_entries %}
                             <tr>
                                 <td><input type="checkbox" class="entry-checkbox" data-section="no_leads" data-entry-id="{{ entry.customer_id }}"></td>
+                                <td>{{ entry.customer_mls }}</td>
                                 <td>{{ entry.customer_name }}</td>
                                 <td>{{ entry.customer_email if entry.customer_email else 'no email found' }}</td>
                                 <td>{{ entry.customer_phone }}</td>
+                                <td>{{ entry.customer_address }}</td>
                                 <td>{{ entry.customer_notes }}</td>
                             </tr>
                         {% endfor %}
@@ -92,13 +100,15 @@
                     <button class="add-to-kvcore-btn" data-section="possible-leads">Add to KVCore</button>
                     <button class="delete-selected-btn" data-section="possible-leads">Delete</button>
                 </div>
-                <table border="1">
+                <table border="0">
                     <thead>
                         <tr>
                             <th class="checkbox-column"><input type="checkbox" class="select-all" data-section="no_answer"></th>
+                            <th>MLS</th>
                             <th>Customer Name</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>Address</th>
                             <th>Notes</th>
                         </tr>
                     </thead>
@@ -106,9 +116,12 @@
                         {% for entry in no_answer_entries %}
                             <tr>
                                 <td><input type="checkbox" class="entry-checkbox" data-section="no_answer" data-entry-id="{{ entry.customer_id }}"></td>
+                                <td>{{ entry.customer_id }}</td>
+                                <td>{{ entry.customer_mls }}</td>
                                 <td>{{ entry.customer_name }}</td>
                                 <td>{{ entry.customer_email if entry.customer_email else 'no email found' }}</td>
                                 <td>{{ entry.customer_phone }}</td>
+                                <td>{{ entry.customer_address }}</td>
                                 <td>{{ entry.customer_notes }}</td>
                             </tr>
                         {% endfor %}
@@ -190,13 +203,13 @@
 
                                 <td class="lead-classification">
                                     <div class="classification-buttons">
-                                        <button class="classify-btn possible-lead-btn" data-mls="{{ listing.MLS }}" data-owner-names="{{ listing.Owner_Names }}" data-owner-phone="{{ listing.Owner_Phone }}" data-owner-email="{{ listing.Owner_Email if listing.Owner_Email else 'no email found' }}" data-section="possible_leads">
+                                        <button class="classify-btn possible-lead-btn" data-id="{{ listing.ID }}" data-mls="{{ listing.MLS }}" data-owner-names="{{ listing.Owner_Names }}" data-owner-phone="{{ listing.Owner_Phone }}" data-owner-email="{{ listing.Owner_Email if listing.Owner_Email else 'no email found' }}" data-owner-address= "{{ listing.Owner_Address }}" data-owner-notes= "{{ listing.Notes }}" data-section="possible_leads">
                                             Possible Lead
                                         </button>
-                                        <button class="classify-btn no-lead-btn" data-mls="{{ listing.MLS }}" data-owner-names="{{ listing.Owner_Names }}" data-owner-phone="{{ listing.Owner_Phone }}" data-owner-email="{{ listing.Owner_Email if listing.Owner_Email else 'no email found' }}" data-section="no_leads">
+                                        <button class="classify-btn no-lead-btn" data-id="{{ listing.ID }}" data-mls="{{ listing.MLS }}" data-owner-names="{{ listing.Owner_Names }}" data-owner-phone="{{ listing.Owner_Phone }}" data-owner-email="{{ listing.Owner_Email if listing.Owner_Email else 'no email found' }}" data-owner-address= "{{ listing.Owner_Address }}" data-owner-notes= "{{ listing.Notes }}" data-section="no_leads">
                                             No Lead
                                         </button>
-                                        <button class="classify-btn no-answer-btn" data-mls="{{ listing.MLS }}" data-owner-names="{{ listing.Owner_Names }}" data-owner-phone="{{ listing.Owner_Phone }}" data-owner-email="{{ listing.Owner_Email if listing.Owner_Email else 'no email found' }}" data-section="no_answer">
+                                        <button class="classify-btn no-answer-btn" data-id="{{ listing.ID }}" data-mls="{{ listing.MLS }}" data-owner-names="{{ listing.Owner_Names }}" data-owner-phone="{{ listing.Owner_Phone }}" data-owner-email="{{ listing.Owner_Email if listing.Owner_Email else 'no email found' }}" data-owner-address= "{{ listing.Owner_Address }}" data-owner-notes= "{{ listing.Notes }}" data-section="no_answer">
                                             No Answer
                                         </button>
                                     </div>
@@ -230,36 +243,22 @@ function resetCheckboxes(sectionId) {
     updateSectionButtons(sectionId);
 }
 
-// Event listeners for toggling the visibility of the sections and resetting checkboxes
-document.getElementById('toggle-possible-lead').addEventListener('click', function () {
-    const sectionId = 'possible-lead-list';
-    const sectionElement = document.getElementById(sectionId);
-
-    sectionElement.style.display = sectionElement.style.display === 'block' ? 'none' : 'block';
-    if (sectionElement.style.display === 'none') {
-        resetCheckboxes(sectionId);
+// Helper function to update section buttons based on checkbox state
+function updateSectionButtons(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        const checkedBoxes = section.querySelectorAll('.entry-checkbox:checked').length;
+        const addToKvCoreBtn = section.querySelector('.add-to-kvcore-btn');
+        const deleteBtn = section.querySelector('.delete-selected-btn');
+        
+        if (addToKvCoreBtn) {
+            addToKvCoreBtn.disabled = checkedBoxes === 0;
+        }
+        if (deleteBtn) {
+            deleteBtn.disabled = checkedBoxes === 0;
+        }
     }
-});
-
-document.getElementById('toggle-no-lead').addEventListener('click', function () {
-    const sectionId = 'no-lead-list';
-    const sectionElement = document.getElementById(sectionId);
-
-    sectionElement.style.display = sectionElement.style.display === 'block' ? 'none' : 'block';
-    if (sectionElement.style.display === 'none') {
-        resetCheckboxes(sectionId);
-    }
-});
-
-document.getElementById('toggle-no-answer').addEventListener('click', function () {
-    const sectionId = 'no-answer-list';
-    const sectionElement = document.getElementById(sectionId);
-
-    sectionElement.style.display = sectionElement.style.display === 'block' ? 'none' : 'block';
-    if (sectionElement.style.display === 'none') {
-        resetCheckboxes(sectionId);
-    }
-});
+}
 
 // Form submission for generating new leads
 $('#leadsForm').on('submit', function(e) {
@@ -293,396 +292,339 @@ $(document).ready(function () {
             $('.toggle-content').hide();
         }
     });
-    
-        // Section-specific checkbox and button handling (from previous solution)
-        function updatePossibleLeadButtons() {
-            const checkedCount = $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]:checked').length;
-            const hasSelection = checkedCount > 0;
-            $('#possible-lead-list .add-to-kvcore-btn').prop('disabled', !hasSelection);
-            $('#possible-lead-list .delete-selected-btn').prop('disabled', !hasSelection);
-        }
-    
-        function updateNoLeadButtons() {
-            const checkedCount = $('#no-lead-list .entry-checkbox[data-section="no_leads"]:checked').length;
-            const hasSelection = checkedCount > 0;
-            $('#no-lead-list .add-to-kvcore-btn').prop('disabled', !hasSelection);
-            $('#no-lead-list .delete-selected-btn').prop('disabled', !hasSelection);
-        }
-    
-        function updateNoAnswerButtons() {
-            const checkedCount = $('#no-answer-list .entry-checkbox[data-section="no_answer"]:checked').length;
-            const hasSelection = checkedCount > 0;
-            $('#no-answer-list .add-to-kvcore-btn').prop('disabled', !hasSelection);
-            $('#no-answer-list .delete-selected-btn').prop('disabled', !hasSelection);
-        }
-    
-        function updatePossibleLeadSelectAll() {
-            const totalCheckboxes = $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]').length;
-            const checkedCheckboxes = $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]:checked').length;
-            $('#possible-lead-list .select-all[data-section="possible_leads"]').prop('checked', 
-                totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes
-            );
-            updatePossibleLeadButtons();
-        }
-    
-        function updateNoLeadSelectAll() {
-            const totalCheckboxes = $('#no-lead-list .entry-checkbox[data-section="no_leads"]').length;
-            const checkedCheckboxes = $('#no-lead-list .entry-checkbox[data-section="no_leads"]:checked').length;
-            $('#no-lead-list .select-all[data-section="no_leads"]').prop('checked', 
-                totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes
-            );
-            updateNoLeadButtons();
-        }
-    
-        function updateNoAnswerSelectAll() {
-            const totalCheckboxes = $('#no-answer-list .entry-checkbox[data-section="no_answer"]').length;
-            const checkedCheckboxes = $('#no-answer-list .entry-checkbox[data-section="no_answer"]:checked').length;
-            $('#no-answer-list .select-all[data-section="no_answer"]').prop('checked', 
-                totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes
-            );
-            updateNoAnswerButtons();
-        }
-    
-        // Section visibility toggles
-        $('#toggle-possible-lead').click(function() {
-            const sectionList = $('#possible-lead-list');
-            sectionList.toggle();
-            $(this).text(sectionList.is(':visible') ? 
-                'Hide possible lead' : 
-                'Show possible lead'
-            );
-        });
-    
-        $('#toggle-no-lead').click(function() {
-            const sectionList = $('#no-lead-list');
-            sectionList.toggle();
-            $(this).text(sectionList.is(':visible') ? 
-                'Hide no lead' : 
-                'Show no lead'
-            );
-        });
-    
-        $('#toggle-no-answer').click(function() {
-            const sectionList = $('#no-answer-list');
-            sectionList.toggle();
-            $(this).text(sectionList.is(':visible') ? 
-                'Hide no answer' : 
-                'Show no answer'
-            );
-        });
-    
-        // Content toggles (MLS, Owner Info, Prior Agent)
-        $('#basicInfoTable').on('click', '.toggle', function () {
-            const target = $(this).data('target');
-            const content = $('#' + target);
-            content.toggle();
-            $(this).text(content.is(':visible') ? '-' : '+');
-        });
-    
-        // Notes handling
-        function handleNotes(action, identifier, notes = null) {
-            let url = '';
-            const data = { [identifier.includes('@') ? 'email' : 'mls']: identifier };
-    
-            if (action === 'get') {
-                url = identifier.includes('@') ? '/get_customer_notes' : '/get_notes';
-                if (notes) data.notes = notes;
-            } else if (action === 'save') {
-                url = identifier.includes('@') ? '/save_customer_notes' : '/save_notes';
-                data.notes = notes;
-            } else if (action === 'delete') {
-                url = identifier.includes('@') ? '/delete_customer_notes' : '/delete_notes';
-            }
-    
-            $.ajax({
-                url: url,
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function (response) {
-                    if (action === 'get' && response.notes) {
-                        $(`#notes-${identifier}`).val(response.notes);
-                    } else if (action === 'save') {
-                        alert('Notes saved successfully');
-                    } else if (action === 'delete') {
-                        alert('Notes deleted successfully');
-                    }
-                },
-                error: function () {
-                    console.error(`Failed to ${action} notes.`);
-                    alert(`Error ${action}ing notes`);
-                }
-            });
-        }
-    
-        // Notes button handlers
-        $('#basicInfoTable tbody').on('click', '.add-notes', function () {
-            const mls = $(this).data('mls');
-            const notesInput = $(this).siblings('.notes-input');
-            notesInput.toggle();
-    
-            if (notesInput.is(':visible')) {
-                handleNotes('get', mls);
-            }
-        });
-    
-        $('#basicInfoTable tbody').on('click', '.save-notes', function () {
-            const mls = $(this).data('mls');
-            const notes = $(`#notes-${mls}`).val();
-            handleNotes('save', mls, notes);
-        });
-    
-        $('#basicInfoTable tbody').on('click', '.delete-notes', function () {
-            const mls = $(this).data('mls');
-            if (confirm('Are you sure you want to delete these notes?')) {
-                handleNotes('delete', mls);
-                $(`#notes-${mls}`).val('');
-            }
-        });
-    
-        // Classification button handling
-        $('.classify-btn').on('click', function () {
-            const mls = $(this).data('mls');
-            const ownerNames = $(this).data('owner-names');
-            const ownerPhone = $(this).data('owner-phone');
-            const ownerEmail = $(this).data('owner-email');
-            const section = $(this).data('section');
-    
-            const data = {
-                mls: mls,
-                owner_names: ownerNames,
-                owner_phone: ownerPhone,
-                owner_email: ownerEmail,
-                section: section
-            };
-    
-            $.ajax({
-                url: `/create_entry?section=${section}`,
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function (response) {
-                    console.log('Entry saved successfully:', response);
-                    alert(`Entry successfully added to ${section.replace('_', ' ')}`);
 
-                    // Reset checkboxes after successful action
-                    resetCheckboxes(section);
-                },
-                error: function () {
-                    console.error('Error saving lead entry');
-                    alert('Error saving entry');
-                }
-            });
-        });
-    
+    // Section visibility toggles with content refresh
+    $('#toggle-possible-lead').click(function() {
+        const sectionList = $('#possible-lead-list');
+        sectionList.toggle();
+        $(this).text(sectionList.is(':visible') ? 
+            'Hide possible lead' : 
+            'Show possible lead'
+        );
         
-        // Event handlers for "Select All" checkboxes
-        $('#possible-lead-list .select-all[data-section="possible_leads"]').on('change', function() {
-            const isChecked = $(this).prop('checked');
-            $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]').prop('checked', isChecked);
-            updatePossibleLeadButtons();
-        });
-    
-        $('#no-lead-list .select-all[data-section="no_leads"]').on('change', function() {
-            const isChecked = $(this).prop('checked');
-            $('#no-lead-list .entry-checkbox[data-section="no_leads"]').prop('checked', isChecked);
-            updateNoLeadButtons();
-        });
-    
-        $('#no-answer-list .select-all[data-section="no_answer"]').on('change', function() {
-            const isChecked = $(this).prop('checked');
-            $('#no-answer-list .entry-checkbox[data-section="no_answer"]').prop('checked', isChecked);
-            updateNoAnswerButtons();
-        });
-    
-        // Event handlers for individual checkboxes
-        $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]').on('change', function() {
-            updatePossibleLeadSelectAll();
-        });
-    
-        $('#no-lead-list .entry-checkbox[data-section="no_leads"]').on('change', function() {
-            updateNoLeadSelectAll();
-        });
-    
-        $('#no-answer-list .entry-checkbox[data-section="no_answer"]').on('change', function() {
-            updateNoAnswerSelectAll();
-        });
-    
-        // Delete handlers for each section
-        $('#possible-lead-list .delete-selected-btn').on('click', function() {
-            const selectedIds = [];
-            $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]:checked').each(function() {
-                selectedIds.push($(this).data('entry-id'));
-            });
-            handleDelete(selectedIds, 'possible_leads');
-        });
-    
-        $('#no-lead-list .delete-selected-btn').on('click', function() {
-            const selectedIds = [];
-            $('#no-lead-list .entry-checkbox[data-section="no_leads"]:checked').each(function() {
-                selectedIds.push($(this).data('entry-id'));
-            });
-            handleDelete(selectedIds, 'no_leads');
-        });
-    
-        $('#no-answer-list .delete-selected-btn').on('click', function() {
-            const selectedIds = [];
-            $('#no-answer-list .entry-checkbox[data-section="no_answer"]:checked').each(function() {
-                selectedIds.push($(this).data('entry-id'));
-            });
-            handleDelete(selectedIds, 'no_answer');
-        });
-    
-        // KVCore handlers for each section
-        $('#possible-lead-list .add-to-kvcore-btn').on('click', function() {
-            const selectedIds = [];
-            $('#possible-lead-list .entry-checkbox[data-section="possible_leads"]:checked').each(function() {
-                selectedIds.push($(this).data('entry-id'));
-            });
-            handleKVCore(selectedIds, 'possible_leads');
-        });
-    
-        $('#no-lead-list .add-to-kvcore-btn').on('click', function() {
-            const selectedIds = [];
-            $('#no-lead-list .entry-checkbox[data-section="no_leads"]:checked').each(function() {
-                selectedIds.push($(this).data('entry-id'));
-            });
-            handleKVCore(selectedIds, 'no_leads');
-        });
-    
-        $('#no-answer-list .add-to-kvcore-btn').on('click', function() {
-            const selectedIds = [];
-            $('#no-answer-list .entry-checkbox[data-section="no_answer"]:checked').each(function() {
-                selectedIds.push($(this).data('entry-id'));
-            });
-            handleKVCore(selectedIds, 'no_answer');
-        });
-    
-        function handleDelete(selectedIds, section) {
-            if (selectedIds.length > 0) {
-                if (confirm(`Are you sure you want to delete ${selectedIds.length} selected entries?`)) {
-                    $.ajax({
-                        url: '/delete_entries',
-                        method: 'POST',
-                        data: JSON.stringify({ 
-                            ids: selectedIds,
-                            section: section
-                        }),
-                        contentType: 'application/json',
-                        success: function(response) {
-                            if (section === 'possible_leads') updatePossibleLeadSelectAll();
-                            else if (section === 'no_leads') updateNoLeadSelectAll();
-                            else if (section === 'no_answer') updateNoAnswerSelectAll();
-                            alert('Entries deleted successfully');
-                        },
-                        error: function() {
-                            alert('Error deleting entries');
-                        }
-                    });
-                }
-            } else {
-                alert('Please select entries to delete');
-            }
+        if (sectionList.is(':visible')) {
+            refreshContent('possible_leads', 'possible-lead-list');
+        } else {
+            resetCheckboxes('possible-lead-list');
         }
-    
-        function handleKVCore(selectedIds, section) {
-            if (selectedIds.length > 0) {
-                if (confirm(`Add ${selectedIds.length} selected entries to KVCore?`)) {
-                    $.ajax({
-                        url: '/add_to_kvcore',
-                        method: 'POST',
-                        data: JSON.stringify({ 
-                            ids: selectedIds,
-                            section: section
-                        }),
-                        contentType: 'application/json',
-                        success: function(response) {
-                            $(`#${section}-list .entry-checkbox[data-section="${section}"]`).prop('checked', false);
-                            if (section === 'possible_leads') updatePossibleLeadSelectAll();
-                            else if (section === 'no_leads') updateNoLeadSelectAll();
-                            else if (section === 'no_answer') updateNoAnswerSelectAll();
-                            alert('Successfully added to KVCore');
-                        },
-                        error: function() {
-                            alert('Error adding to KVCore');
-                        }
-                    });
-                }
-            } else {
-                alert('Please select entries to add to KVCore');
-            }
-        }
-    
-        // Initialize button states on page load
-        updatePossibleLeadButtons();
-        updateNoLeadButtons();
-        updateNoAnswerButtons();
-
-        // Function to toggle and refresh content when section is displayed
-        function refreshSectionContent(sectionId, sectionType) {
-            const sectionElement = document.getElementById(sectionId);
-
-            // If the section is becoming visible, trigger a content refresh
-            if (sectionElement.style.display === 'none') {
-                sectionElement.style.display = 'block';
-                
-                // Fetch new data and refresh the section content
-                refreshContent(sectionType, sectionId);
-            } else {
-                // If the section is being hidden, simply toggle the display
-                sectionElement.style.display = 'none';
-            }
-        }
-
-        // Function to fetch and refresh content for a specific section
-        function refreshContent(sectionType, sectionId) {
-            const tbody = document.querySelector(`#${sectionId} tbody`);
-            tbody.innerHTML = '<tr><td colspan="5">Loading...</td></tr>'; // Show loading message
-            
-            // Fetch new data from the backend for the section
-            fetch(`/get_section_data?section=${sectionType}`)
-                .then(response => response.json())
-                .then(data => {
-                    tbody.innerHTML = ''; // Clear existing rows
-                    if (data && data.length > 0) {
-                        data.forEach(entry => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td><input type="checkbox" class="entry-checkbox" data-section="${sectionType}" data-entry-id="${entry.id}"></td>
-                                <td>${entry.name}</td>
-                                <td>${entry.email || 'no email found'}</td>
-                                <td>${entry.phone}</td>
-                                <td>${entry.notes || ''}</td>
-                            `;
-                            tbody.appendChild(row);
-                        });
-                    } else {
-                        tbody.innerHTML = '<tr><td colspan="5">No entries found.</td></tr>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching section data:', error);
-                    tbody.innerHTML = '<tr><td colspan="5">Error loading data.</td></tr>';
-                });
-        }
-
-        // Add event listeners to your buttons
-        document.getElementById('toggle-no-lead').addEventListener('click', function() {
-            refreshSectionContent('no-lead-list', 'no_leads');
-        });
-
-        document.getElementById('toggle-no-answer').addEventListener('click', function() {
-            refreshSectionContent('no-answer-list', 'no_answer');
-        });
-
-        document.getElementById('toggle-possible-lead').addEventListener('click', function() {
-            refreshSectionContent('possible-lead-list', 'possible_leads');
-        });
-
-
     });
 
+    $('#toggle-no-lead').click(function() {
+        const sectionList = $('#no-lead-list');
+        sectionList.toggle();
+        $(this).text(sectionList.is(':visible') ? 
+            'Hide no lead' : 
+            'Show no lead'
+        );
+        
+        if (sectionList.is(':visible')) {
+            refreshContent('no_leads', 'no-lead-list');
+        } else {
+            resetCheckboxes('no-lead-list');
+        }
+    });
+
+    $('#toggle-no-answer').click(function() {
+        const sectionList = $('#no-answer-list');
+        sectionList.toggle();
+        $(this).text(sectionList.is(':visible') ? 
+            'Hide no answer' : 
+            'Show no answer'
+        );
+        
+        if (sectionList.is(':visible')) {
+            refreshContent('no_answer', 'no-answer-list');
+        } else {
+            resetCheckboxes('no-answer-list');
+        }
+    });
+
+    // Content toggles (MLS, Owner Info, Prior Agent)
+    $('#basicInfoTable').on('click', '.toggle', function () {
+        const target = $(this).data('target');
+        const content = $('#' + target);
+        content.toggle();
+        $(this).text(content.is(':visible') ? '-' : '+');
+    });
+
+    // Notes handling
+    function handleNotes(action, identifier, notes = null) {
+        let url = '';
+        const data = { [identifier.includes('@') ? 'email' : 'mls']: identifier };
+
+        if (action === 'get') {
+            url = identifier.includes('@') ? '/get_customer_notes' : '/get_notes';
+            if (notes) data.notes = notes;
+        } else if (action === 'save') {
+            url = identifier.includes('@') ? '/save_customer_notes' : '/save_notes';
+            data.notes = notes;
+        } else if (action === 'delete') {
+            url = identifier.includes('@') ? '/delete_customer_notes' : '/delete_notes';
+        }
+
+        $.ajax({
+            url: url,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                if (action === 'get' && response.notes) {
+                    $(`#notes-${identifier}`).val(response.notes);
+                } else if (action === 'save') {
+                    alert('Notes saved successfully');
+                } else if (action === 'delete') {
+                    alert('Notes deleted successfully');
+                }
+            },
+            error: function () {
+                console.error(`Failed to ${action} notes.`);
+                alert(`Error ${action}ing notes`);
+            }
+        });
+    }
+
+    // Notes button handlers
+    $('#basicInfoTable tbody').on('click', '.add-notes', function () {
+        const mls = $(this).data('mls');
+        const notesInput = $(this).siblings('.notes-input');
+        notesInput.toggle();
+
+        if (notesInput.is(':visible')) {
+            handleNotes('get', mls);
+        }
+    });
+
+    $('#basicInfoTable tbody').on('click', '.save-notes', function () {
+        const mls = $(this).data('mls');
+        const notes = $(`#notes-${mls}`).val();
+        handleNotes('save', mls, notes);
+    });
+
+    $('#basicInfoTable tbody').on('click', '.delete-notes', function () {
+        const mls = $(this).data('mls');
+        if (confirm('Are you sure you want to delete these notes?')) {
+            handleNotes('delete', mls);
+            $(`#notes-${mls}`).val('');
+        }
+    });
+
+    // Classification button handling
+    $('.classify-btn').on('click', function () {
+        const id = $(this).data('id');
+        const mls = $(this).data('mls');
+        const ownerNames = $(this).data('owner-names');
+        const ownerPhone = $(this).data('owner-phone');
+        const ownerEmail = $(this).data('owner-email');
+        const ownerAddress = $(this).data('owner-address');
+        const ownerNotes = $(this).data('owner-notes');
+        const section = $(this).data('section');
+
+        const data = {
+            id: id,
+            mls: mls,
+            owner_names: ownerNames,
+            owner_phone: ownerPhone,
+            owner_email: ownerEmail,
+            owner_notes: ownerNotes,
+            owner_address: ownerAddress,
+            section: section
+        };
+
+        $.ajax({
+            url: `/create_entry?section=${section}`,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                console.log('Entry saved successfully:', response);
+                alert(`Entry successfully added to ${section.replace('_', ' ')}`);
+                resetCheckboxes(section);
+            },
+            error: function () {
+                console.error('Error saving lead entry');
+                alert('Error saving entry');
+            }
+        });
+    });
+
+    // Event handler for individual checkboxes
+    $('.entry-checkbox').on('change', function() {
+        const section = $(this).closest('div[id$="-list"]').attr('id');
+        updateSectionButtons(section);
+        
+        // Update "Select All" checkbox state
+        const sectionElement = $(this).closest('div[id$="-list"]');
+        const totalCheckboxes = sectionElement.find('.entry-checkbox').length;
+        const checkedCheckboxes = sectionElement.find('.entry-checkbox:checked').length;
+        sectionElement.find('.select-all').prop('checked', 
+            totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes
+        );
+    });
+
+    // Event handler for "Select All" checkboxes
+    $('.select-all').on('change', function() {
+        const section = $(this).closest('div[id$="-list"]');
+        const isChecked = $(this).prop('checked');
+        
+        // Update all checkboxes in the section
+        section.find('.entry-checkbox').prop('checked', isChecked);
+        
+        // Update button states
+        updateSectionButtons(section.attr('id'));
+    });
+
+    // Delete handlers for each section
+    $('.delete-selected-btn').on('click', function() {
+        const section = $(this).closest('div[id$="-list"]');
+        const sectionType = section.attr('id').replace('-list', '').replace('-', '_');
+        const selectedIds = [];
+        
+        section.find('.entry-checkbox:checked').each(function() {
+            selectedIds.push($(this).data('entry-id'));
+        });
+        
+        handleDelete(selectedIds, sectionType);
+    });
+
+    // KVCore handlers for each section
+    $('.add-to-kvcore-btn').on('click', function() {
+        const section = $(this).closest('div[id$="-list"]');
+        const sectionType = section.attr('id').replace('-list', '').replace('-', '_');
+        const selectedIds = [];
+        
+        section.find('.entry-checkbox:checked').each(function() {
+            selectedIds.push($(this).data('entry-id'));
+        });
+        
+        handleKVCore(selectedIds, sectionType);
+    });
+
+
+    function handleDelete(selectedIds, section) {
+        alert('Selected IDs: ' + JSON.stringify(selectedIds));  // This will display the selected IDs in a readable format
+        if (selectedIds.length > 0) {
+            if (confirm(`Are you sure you want to delete ${selectedIds.length} selected entries?`)) {
+                $.ajax({
+                    url: '/delete_entries',
+                    method: 'POST',
+                    data: JSON.stringify({ 
+                        ids: selectedIds,
+                        section: section
+                    }),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        if (section === 'possible_leads') updatePossibleLeadSelectAll();
+                        else if (section === 'no_leads') updateNoLeadSelectAll();
+                        else if (section === 'no_answer') updateNoAnswerSelectAll();
+                        alert('Entries deleted successfully');
+                    },
+                    error: function() {
+                        alert('Error deleting entries');
+                    }
+                });
+            }
+        } else {
+            alert('Please select entries to delete');
+        }
+    }
     
+
+    function handleKVCore(selectedIds, section) {
+        if (selectedIds.length > 0) {
+            if (confirm(`Add ${selectedIds.length} selected entries to KVCore?`)) {
+                $.ajax({
+                    url: '/add_to_kvcore',
+                    method: 'POST',
+                    data: JSON.stringify({ 
+                        ids: selectedIds,
+                        section: section
+                    }),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        alert('Successfully added to KVCore');
+                        // Refresh the section content
+                        refreshContent(section, `${section.replace('_', '-')}-list`);
+                    },
+                    error: function() {
+                        alert('Error adding to KVCore');
+                    }
+                });
+            }
+        } else {
+            alert('Please select entries to add to KVCore');
+        }
+    }
+
+    // Function to fetch and refresh content for a specific section
+    function refreshContent(sectionType, sectionId) {
+        const tbody = document.querySelector(`#${sectionId} tbody`);
+        tbody.innerHTML = '<tr><td colspan="8">Loading...</td></tr>';
+        
+        fetch(`/get_section_data?section=${sectionType}`)
+            .then(response => response.json())
+            .then(data => {
+                tbody.innerHTML = '';
+                if (data && data.length > 0) {
+                    data.forEach(entry => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><input type="checkbox" class="entry-checkbox" data-section="${sectionType}" data-entry-id="${entry.id}"></td>
+                            <td>${entry.mls || ''}</td>
+                            <td>${entry.name || ''}</td>
+                            <td>${entry.email || ''}</td>
+                            <td>${entry.phone || ''}</td>
+                            <td>${entry.address || ''}</td>
+                            <td>${entry.notes || ''}</td>
+                            <td>
+                                <button class="add-notes" data-mls="${entry.mls}">Add Notes</button>
+                                <div class="notes-input" style="display: none;">
+                                    <textarea id="notes-${entry.mls}"></textarea>
+                                    <button class="save-notes" data-mls="${entry.mls}">Save</button>
+                                    <button class="delete-notes" data-mls="${entry.mls}">Delete</button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    
+                    // Reattach event handlers for new checkboxes
+                    attachCheckboxHandlers();
+                    // Update button states
+                    updateSectionButtons(sectionId);
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="8">No entries found.</td></tr>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching section data:', error);
+                tbody.innerHTML = '<tr><td colspan="8">Error loading data.</td></tr>';
+            });
+    }
+
+    // Function to attach event handlers to checkboxes
+    function attachCheckboxHandlers() {
+        $('.entry-checkbox').off('change').on('change', function() {
+            const section = $(this).closest('div[id$="-list"]').attr('id');
+            updateSectionButtons(section);
+            
+            // Update "Select All" checkbox state
+            const sectionElement = $(this).closest('div[id$="-list"]');
+            const totalCheckboxes = sectionElement.find('.entry-checkbox').length;
+            const checkedCheckboxes = sectionElement.find('.entry-checkbox:checked').length;
+            sectionElement.find('.select-all').prop('checked', 
+                totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes
+            );
+        });
+    }
+
+    // Initialize button states on page load
+    ['possible-lead-list', 'no-lead-list', 'no-answer-list'].forEach(sectionId => {
+        updateSectionButtons(sectionId);
+    });
+
+    // Initial attachment of checkbox handlers
+    attachCheckboxHandlers();
+});
    </script>
 </body>
 </html>

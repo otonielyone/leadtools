@@ -13,6 +13,7 @@ from start_files.models.leads_db_section import (
     No_answer, 
     No_leads
 )
+from sqlalchemy.orm import class_mapper
 from start_files.routes.leads_scripts import start_leads
 from pydantic import BaseModel
 import logging
@@ -96,6 +97,7 @@ async def view_leads(request: Request):
     with leads_sessionLocal() as db:
         leads_db = db.query(Mls_leads).all()
         leads = [{
+            'ID': lead.id,
             'MLS': lead.mls,
             'Status': lead.status,
             'Sale_Amount': lead.sale_amt,
@@ -120,27 +122,33 @@ async def view_leads(request: Request):
         possible_leads_data = db.query(Possible_leads).all()
         possible_entries = [{
             'customer_id':entry.id,
+            'customer_mls':entry.mls,
             'customer_name': entry.name,
             'customer_phone': entry.phone,
             'customer_email': entry.email,
+            'customer_address': entry.address,
             'customer_notes': entry.notes,
         } for entry in possible_leads_data]
 
         no_answer_data = db.query(No_answer).all()
         no_answer_entries = [{
             'customer_id':entry.id,
+            'customer_mls':entry.mls,
             'customer_name': entry.name,
             'customer_phone': entry.phone,
             'customer_email': entry.email,
+            'customer_address': entry.address,
             'customer_notes': entry.notes,
         } for entry in no_answer_data]
 
         no_leads_data = db.query(No_leads).all()
         no_leads_entries = [{
             'customer_id':entry.id,
+            'customer_mls':entry.mls,
             'customer_name': entry.name,
             'customer_phone': entry.phone,
             'customer_email': entry.email,
+            'customer_address': entry.address,
             'customer_notes': entry.notes,
         } for entry in no_leads_data]
 
@@ -163,9 +171,11 @@ async def get_section_data(section: str):
         # Return the data in a suitable format for frontend
         return [{
             'id': entry.id,
+            'mls': entry.mls,
             'name': entry.name,
             'phone': entry.phone,
             'email': entry.email,
+            'address': entry.address,
             'notes': entry.notes or ''
         } for entry in entries]
 
@@ -234,10 +244,13 @@ async def delete_notes(request: Request):
 ###################################
 # Define Pydantic models for request and response validation
 class ContactCreate(BaseModel):
+    id: int
+    mls: str
     owner_names: str
     owner_phone: str
     owner_email: str
-    mls: str
+    owner_address: str
+    owner_notes: str
 
 class ContactResponse(BaseModel):
     message: str
@@ -262,9 +275,12 @@ async def create_entry(contact: ContactCreate, section: str):
     
 def save_data(data: dict, section):
     # Extract fields from the data dictionary
+    id = data.get('id')
+    mls = data.get('mls')
     name = data.get('owner_names')
     phone = data.get('owner_phone')
     email = data.get('owner_email')
+    address = data.get('owner_address')
     notes = data.get('owner_notes')
     
     if not name:
@@ -276,14 +292,18 @@ def save_data(data: dict, section):
 
         if lead:
             # Update the lead if it exists
+            lead.id = id if id else lead.id
+            lead.mls = mls if mls else lead.mls
+            lead.name = name if name and name.strip() else lead.name
             lead.phone = phone if phone and phone.strip() else lead.phone
             lead.email = email if email and email.strip() else lead.email
+            lead.address = address if address and address.strip() else lead.email
             lead.notes = f"{lead.notes}\n{notes}" if notes else lead.notes
             db.commit()
             return {'message': f'{section.__tablename__} information updated successfully'}
         else:
             # Create a new lead if it doesn't exist
-            new_lead = section(name=name, phone=phone, email=email, notes=notes)  # Pass the model class
+            new_lead = section(id=id, mls=mls, name=name, phone=phone, email=email, address=address, notes=notes)  # Pass the model class
             db.add(new_lead)
             db.commit()
             return {'message': f'{section.__tablename__} information saved successfully'}
@@ -303,9 +323,7 @@ class AddToKvCoreRequest(BaseModel):
             }
         }
 
-from sqlalchemy.orm import class_mapper
 
-# Helper function to serialize SQLAlchemy objects
 def serialize_sqlalchemy_obj(obj):
     return {col.key: getattr(obj, col.key) for col in class_mapper(obj.__class__).columns}
 
@@ -322,22 +340,23 @@ async def add_to_kvcore(request: AddToKvCoreRequest):
                 table = No_leads
             elif 'no_answer' in request.section:
                 table = No_answer
-
             if not table:
                 raise ValueError(f"Invalid section: {request.section}")
-
             for id in request.ids:
                 id_found = db.query(table).filter_by(id=id).first()
+                
                 if id_found:
                     variables.append(serialize_sqlalchemy_obj(id_found))
-                db.delete(id_found)
-                db.commit()
+                    db.delete(id_found) 
+                else:
+                    logger.warning(f"ID {id} not found in {request.section}")
+            db.commit()
             data = {key: value for d in variables for key, value in d.items()}
-            return {
-                "status": "success"}, logger.info(f"Successfully added {data} to KVCore")
-    except Exception:
-        logger.error(f"Error adding entries to KVCore")
-        return {"status": "error"}
+            logger.info(f"Successfully added {data} to KVCore")
+            return {"status": "success"}
+    except Exception as e:
+        logger.error(f"Error adding entries to KVCore: {str(e)}")
+        return {"status": "error", "message": str(e)}
 
 
 @router.post("/delete_entries")
